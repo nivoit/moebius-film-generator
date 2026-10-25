@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V9 — Screen Recorder</title>
+<title>Moebius Film Generator V10 — Pro</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -145,24 +145,19 @@ select{cursor:pointer; appearance:none;}
 .cine-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:16px; display: flex; align-items: center; gap: 5px;}
 .cine-btn:hover{background:rgba(255,255,255,0.4);}
 #cinemaClose{position:absolute;top:20px;right:20px;z-index:10002;background:rgba(196,69,54,0.8);padding:10px 20px;border-radius:5px;border:none;color:#fff;cursor:pointer;font-size:16px;}
-
-/* RECORDING INDICATOR */
-.recording-dot {display:none;width:12px;height:12px;border-radius:50%;background:red;margin-right:8px;animation: blink 1s infinite;}
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.recording .recording-dot {display:inline-block;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V9 ✦</div>
+<div class="kata">✦ Moebius Film Generator V10 ✦</div>
 <h1>English Comic Studio</h1>
-<p class="sub">Perfect Audio Sync · Screen Recording Export · Visible Zoom</p>
+<p class="sub">Context-Aware AI · Perfect Screen Recording · No Loops</p>
 </header>
 
 <div class="banner">
-<strong>V9 Updates:</strong> The "Export Video" button now uses the browser's built-in screen recorder. It records the video, the zoom, the bubbles, and the voice synthesis perfectly!
+<strong>V10 Updates:</strong> The AI now reads the context of your original images (like a comic book page) and translates the meaning into a short English phrase. The video recorder now stops cleanly at the end of the film.
 </div>
 
 <section class="card">
@@ -210,11 +205,11 @@ select{cursor:pointer; appearance:none;}
 <button class="btn btn-slate" id="addImageBtn" style="flex:1;">＋ Add Image</button>
 </div>
 <div class="row">
-<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extract Subjects</button>
+<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extract Subjects (Context-Aware)</button>
 </div>
 <div class="status" id="analyzeStatus"><span class="dot"></span><span id="analyzeStatusText">Waiting for images</span></div>
 <div id="subjectDescriptions" style="margin-top:1rem; display:none;">
-<h4 style="font-family:Georgia; color:#6bafc4; margin-bottom:0.5rem; font-size:0.9rem;">Extracted Subjects (editable):</h4>
+<h4 style="font-family:Georgia; color:#6bafc4; margin-bottom:0.5rem; font-size:0.9rem;">Extracted Script (editable):</h4>
 <div id="descriptionsList"></div>
 <div class="row" style="margin-top:.8rem;">
 <input type="number" id="filmLength" value="100" min="10" max="200" style="width:70px;">
@@ -457,7 +452,7 @@ async function apiVision(system, user, imageUrl) {
     try {
       const res = await fetch(API_BASE + '/chat/completions', {
         method: 'POST', headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: MODEL_TEXT, messages: [{ role: 'system', content: sanitize(system) }, { role: 'user', content: [{ type: 'text', text: sanitize(user) }, { type: 'image_url', image_url: { url: imageUrl } }] }], temperature: 0.2, max_tokens: 300 }),
+        body: JSON.stringify({ model: MODEL_TEXT, messages: [{ role: 'system', content: sanitize(system) }, { role: 'user', content: [{ type: 'text', text: sanitize(user) }, { type: 'image_url', image_url: { url: imageUrl } }] }], temperature: 0.4, max_tokens: 300 }),
         signal: controller.signal
       });
       clearTimeout(tid);
@@ -537,9 +532,11 @@ async function analyzeImages() {
   if (state.images.length === 0) return;
   $('analyzeBtn').disabled = true; $('subjectDescriptions').style.display = 'none';
   state.subjects = [];
-  const sysPrompt = "You are a comic book scriptwriter. Describe the visual scene in exactly ONE short English sentence (maximum 8 words). Do NOT use markdown, hashtags, or special characters. Just the plain text.";
   
-  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Describe this scene.", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
+  // NEW PROMPT: Context-aware translation and scriptwriting
+  const sysPrompt = "You are a comic book scriptwriter. Analyze the image. If there is text (like French speech bubbles), read it, translate its meaning, and write a SHORT, punchy English sentence (max 8 words). If there is no text, write a dramatic 1-sentence English caption about industrial machining or the worker's action. Output ONLY the English text.";
+  
+  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "What is the script for this scene?", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
   const descs = await Promise.allSettled(tasks);
   descs.forEach((d, i) => { 
       let text = d.status === 'fulfilled' ? d.value : "A mysterious scene.";
@@ -549,7 +546,7 @@ async function analyzeImages() {
       state.subjects.push(text); 
   });
   renderDescriptions(); $('analyzeStatus').className = 'status ok';
-  $('analyzeStatusText').textContent = `${state.subjects.length} subjects extracted.`;
+  $('analyzeStatusText').textContent = `${state.subjects.length} script lines extracted.`;
   $('subjectDescriptions').style.display = 'block';
   updateUI();
 }
@@ -557,7 +554,7 @@ function renderDescriptions() {
   const list = $('descriptionsList'); list.innerHTML = '';
   state.subjects.forEach((sub, i) => {
     const div = document.createElement('div'); div.style.marginBottom = '0.6rem';
-    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Subject ${i + 1}:</label>
+    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Scene ${i + 1}:</label>
       <textarea class="subject-input" data-idx="${i}" style="min-height:50px;font-size:0.72rem;">${esc(sub)}</textarea>`;
     list.appendChild(div);
   });
@@ -645,7 +642,7 @@ function updateProgress() {
   $('progressPct').textContent = `${pct}%`; $('resultsBadge').textContent = `${done} / ${total}`;
 }
 function updateBatchInfo(total) {
-  $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> subjects</span><span><strong>${state.apiKeys.length}</strong> keys</span>`;
+  $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> scenes</span><span><strong>${state.apiKeys.length}</strong> keys</span>`;
 }
 
 // ZIP
@@ -666,7 +663,7 @@ document.getElementById('downloadAllBtn').onclick = async () => {
 };
 
 // ==========================================
-// MODE CINEMA (V9) 
+// MODE CINEMA (V10) 
 // ==========================================
 let cineTimeout = null;
 let cineIdx = 0;
@@ -718,19 +715,21 @@ function playCineFrame() {
 
     const advance = () => {
         if (!cinePlaying) return;
+        
+        // V10 FIX: If recording, stop cleanly at the end. Do not loop.
+        if (cineIdx >= imagesList.length - 1 && isRecording) {
+            cinePlaying = false;
+            $('cinePlayPause').textContent = '▶ Play';
+            toast("Recording finished. Click 'Stop Sharing' in your browser bar.", "success", 8000);
+            return; 
+        }
+
         const elapsed = Date.now() - startTime;
         if (elapsed < minDisplayTime) {
             cineTimeout = setTimeout(advance, minDisplayTime - elapsed);
         } else {
             cineIdx++;
-            if (cineIdx >= imagesList.length) {
-                if (isRecording) {
-                    // Stop recording automatically when movie ends
-                    setTimeout(stopRecording, 2000);
-                    return;
-                }
-                cineIdx = 0; // Loop if not recording
-            }
+            if (cineIdx >= imagesList.length) cineIdx = 0;
             playCineFrame();
         }
     };
@@ -791,14 +790,13 @@ $('bgMusic').onplay = () => {
 };
 
 // ==========================================
-// EXPORT VIDEO (V9) - SCREEN RECORDING
+// EXPORT VIDEO (V10) - SCREEN RECORDING
 // ==========================================
 document.getElementById('exportVideoBtn').onclick = async () => {
     try {
-        // Ask user for screen capture permission
         const stream = await navigator.mediaDevices.getDisplayMedia({
             video: { displaySurface: "browser" },
-            audio: true // Captures tab audio (voice synthesis + music)
+            audio: true 
         });
 
         mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
@@ -811,19 +809,18 @@ document.getElementById('exportVideoBtn').onclick = async () => {
         mediaRecorder.onstop = () => {
             const blob = new Blob(recordedChunks, { type: 'video/webm' });
             saveAs(blob, "comic_movie.webm");
-            toast("Video saved! Open it with VLC.", "success", 5000);
+            toast("Video saved successfully!", "success", 5000);
             isRecording = false;
-            $('cinemaClose').click(); // Close cinema mode
+            cinePlaying = false;
+            clearTimeout(cineTimeout);
+            $('cinemaOverlay').classList.add('hidden');
+            $('cinemaControls').classList.remove('hidden');
         };
 
-        // Start recording
         mediaRecorder.start();
         isRecording = true;
-        
-        // Hide UI controls so they don't appear in the video
         $('cinemaControls').classList.add('hidden');
 
-        // Launch the movie
         imagesList = state.results.filter(r => r.url);
         if (imagesList.length === 0) {
             toast("No images to record.", "error");
@@ -834,15 +831,14 @@ document.getElementById('exportVideoBtn').onclick = async () => {
         $('cinemaOverlay').classList.remove('hidden');
         cineIdx = 0; cinePlaying = true;
         
-        // Wait a brief moment before starting the first frame to ensure recording has started
         setTimeout(() => {
             playCineFrame();
-            toast("Recording in progress... Please do not close this tab.", "warn", 5000);
+            toast("Recording started. The video will stop at the end.", "warn", 5000);
         }, 500);
 
     } catch (err) {
         console.error(err);
-        toast("Screen capture cancelled or failed.", "error");
+        toast("Screen capture cancelled.", "error");
     }
 };
 
@@ -873,7 +869,7 @@ $('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugL
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ V9 Studio ready.');
+human('✦ V10 Studio ready.');
 </script>
 </body>
 </html>
