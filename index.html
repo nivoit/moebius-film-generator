@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Moebius Film Generator — 100 Images</title>
+<!-- Ajout des bibliothèques pour le ZIP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;background:#1a0f0a;color:#e8dcc8;min-height:100vh;padding:1rem 1rem 14rem;font-size:14px;line-height:1.5}
@@ -192,7 +195,14 @@ textarea:focus{border-color:#6bafc4;box-shadow:0 0 0 3px rgba(107,175,196,.15)}
 <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
 <div class="progress-pct" id="progressPct">0%</div>
 <div class="batch-info" id="batchInfo"></div>
-<div class="grid" id="resultsGrid"></div>
+
+<!-- NOUVEAUX BOUTONS GLOBAUX -->
+<div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;">
+    <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Télécharger TOUTES les images (ZIP)</button>
+    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Lire le Mini-Film (Mode Cinéma)</button>
+</div>
+
+<div class="grid" id="resultsGrid" style="margin-top: 1.5rem;"></div>
 </div>
 </section>
 
@@ -665,6 +675,8 @@ async function generateFilm() {
   grid.innerHTML = '';
   const timeline = $('filmTimeline');
   timeline.innerHTML = '';
+  $('downloadAllBtn').style.display = 'none'; // Cacher les boutons au début
+  $('playMovieBtn').style.display = 'none';
 
   const prompts = buildFilmPrompts(state.subjects, totalFrames);
   state.results = prompts.map(p => ({ ...p, status: 'pending', url: null }));
@@ -751,7 +763,12 @@ function updateProgress() {
   const pct = Math.round(((done + failed) / total) * 100);
   const fill = $('progressFill');
   fill.style.width = pct + '%';
-  if (pct === 100) fill.classList.add('done');
+  if (pct === 100) {
+    fill.classList.add('done');
+    // Afficher les nouveaux boutons globaux
+    $('downloadAllBtn').style.display = 'block';
+    $('playMovieBtn').style.display = 'block';
+  }
   $('progressPct').textContent = `${pct}%`;
   $('resultsBadge').textContent = `${done} / ${total}`;
   if (done % 10 === 0 && done > 0) human(`📽️ ${done}/${total} frames…`);
@@ -766,6 +783,68 @@ function updateBatchInfo(total) {
     <span><strong>${MAX_CONCURRENT}</strong> concurrent max</span>
   `;
 }
+
+// ============================================================
+// NOUVEAUTÉS : TÉLÉCHARGEMENT ZIP & MODE CINÉMA
+// ============================================================
+document.getElementById('downloadAllBtn').onclick = async () => {
+    const btn = document.getElementById('downloadAllBtn');
+    btn.textContent = '⏳ Préparation du ZIP...';
+    btn.disabled = true;
+    const zip = new JSZip();
+    const folder = zip.folder("moebius_film");
+    let count = 0;
+    
+    for (let i = 0; i < state.results.length; i++) {
+        const url = state.results[i].url;
+        if (url) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                folder.file(`frame_${String(i+1).padStart(3, '0')}.png`, blob);
+                count++;
+                btn.textContent = `⏳ Téléchargement ${count}/${state.results.length}...`;
+            } catch (e) { console.error("Erreur téléchargement", e); }
+        }
+    }
+    
+    btn.textContent = '🗜️ Compression en cours...';
+    const content = await zip.generateAsync({type: "blob"});
+    saveAs(content, "moebius_film.zip");
+    btn.textContent = '📥 Télécharger TOUTES les images (ZIP)';
+    btn.disabled = false;
+};
+
+document.getElementById('playMovieBtn').onclick = () => {
+    const images = state.results.filter(r => r.url).map(r => r.url);
+    if (images.length === 0) return;
+
+    const cinema = document.createElement('div');
+    cinema.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;';
+    
+    const img = document.createElement('img');
+    img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+    cinema.appendChild(img);
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕ Fermer';
+    closeBtn.style.cssText = 'position:absolute;top:20px;right:20px;padding:10px 20px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;z-index:10000;';
+    closeBtn.onclick = () => {
+        clearInterval(window.movieInterval);
+        document.body.removeChild(cinema);
+    };
+    cinema.appendChild(closeBtn);
+    document.body.appendChild(cinema);
+
+    let currentIdx = 0;
+    img.src = images[currentIdx];
+    
+    window.movieInterval = setInterval(() => {
+        currentIdx++;
+        if (currentIdx >= images.length) currentIdx = 0;
+        img.src = images[currentIdx];
+    }, 100); // 10 fps
+};
 
 // ============================================================
 // BINDINGS & INIT
