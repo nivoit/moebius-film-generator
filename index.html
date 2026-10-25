@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V10 — Pro</title>
+<title>Moebius Film Generator V11 — Studio Français</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -151,33 +151,33 @@ select{cursor:pointer; appearance:none;}
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V10 ✦</div>
-<h1>English Comic Studio</h1>
-<p class="sub">Context-Aware AI · Perfect Screen Recording · No Loops</p>
+<div class="kata">✦ Moebius Film Generator V11 ✦</div>
+<h1>Studio Comic Français</h1>
+<p class="sub">Bulles BD · Voix Française · Enregistrement Vidéo</p>
 </header>
 
 <div class="banner">
-<strong>V10 Updates:</strong> The AI now reads the context of your original images (like a comic book page) and translates the meaning into a short English phrase. The video recorder now stops cleanly at the end of the film.
+<strong>Mise à jour V11 :</strong> L'interface et la voix sont 100% en français. Le prompt de l'IA est optimisé pour comprendre le contexte de vos images (ex: BD sur l'usinage).
 </div>
 
 <section class="card">
-<div class="card-head"><span>⚙️ Creation Options</span></div>
+<div class="card-head"><span>⚙️ Options de Création</span></div>
 <div class="card-body">
     <div class="options-grid">
         <div>
-            <label class="hint" style="margin-top:0;">Visual Style</label>
+            <label class="hint" style="margin-top:0;">Style Visuel</label>
             <select id="styleSelect">
-                <option value="Moebius">Moebius (Franco-Belgian Sci-Fi)</option>
-                <option value="Ghibli">Ghibli (Soft Anime)</option>
-                <option value="Cyberpunk" selected>Cyberpunk (Neon, Dark)</option>
-                <option value="Watercolor">Watercolor (Soft Painting)</option>
+                <option value="Moebius">Moebius (BD SF franco-belge)</option>
+                <option value="Ghibli">Ghibli (Animation japonaise douce)</option>
+                <option value="Cyberpunk" selected>Cyberpunk (Néon, sombre)</option>
+                <option value="Watercolor">Aquarelle (Peinture douce)</option>
             </select>
         </div>
         <div>
-            <label class="hint" style="margin-top:0;">Image Format</label>
+            <label class="hint" style="margin-top:0;">Format d'image</label>
             <select id="formatSelect">
-                <option value="1024x1792">Portrait (9:16) - Social Media</option>
-                <option value="1792x1024">Landscape (16:9) - Cinema</option>
+                <option value="1024x1792">Portrait (9:16) - Réseaux Sociaux</option>
+                <option value="1792x1024">Paysage (16:9) - Cinéma</option>
             </select>
         </div>
     </div>
@@ -185,43 +185,43 @@ select{cursor:pointer; appearance:none;}
 </section>
 
 <section class="card">
-<div class="card-head"><span>🔑 API Keys (Multi-Key)</span><span class="badge" id="keyBadge">0 keys</span></div>
+<div class="card-head"><span>🔑 Clés API (Multi-Key)</span><span class="badge" id="keyBadge">0 clé</span></div>
 <div class="card-body">
-<textarea id="keysInput" placeholder="Paste your API keys here, one per line..." autocomplete="off" spellcheck="false"></textarea>
+<textarea id="keysInput" placeholder="Collez vos clés API ici, une par ligne..." autocomplete="off" spellcheck="false"></textarea>
 <div class="row">
-<button class="btn btn-amber" id="validateBtn">⚡ Validate & Save</button>
-<button class="btn btn-slate" id="clearKeysBtn" style="width:auto;min-width:80px;">Clear</button>
+<button class="btn btn-amber" id="validateBtn">⚡ Valider & Enregistrer</button>
+<button class="btn btn-slate" id="clearKeysBtn" style="width:auto;min-width:80px;">Effacer</button>
 </div>
 <div class="keys-panel" id="keysPanel"></div>
-<div class="status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">No keys saved</span></div>
+<div class="status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">Aucune clé enregistrée</span></div>
 </div>
 </section>
 
 <section class="card">
-<div class="card-head"><span>🖼️ Reference Images (Film Subjects)</span><span class="badge" id="refBadge">0 image</span></div>
+<div class="card-head"><span>🖼️ Images de Référence (Sujets du Film)</span><span class="badge" id="refBadge">0 image</span></div>
 <div class="card-body">
 <div class="images-grid" id="imagesGrid"></div>
 <div class="row" style="margin-top:.2rem;">
-<button class="btn btn-slate" id="addImageBtn" style="flex:1;">＋ Add Image</button>
+<button class="btn btn-slate" id="addImageBtn" style="flex:1;">＋ Ajouter une image</button>
 </div>
 <div class="row">
-<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extract Subjects (Context-Aware)</button>
+<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extraire les Sujets (Contexte BD)</button>
 </div>
-<div class="status" id="analyzeStatus"><span class="dot"></span><span id="analyzeStatusText">Waiting for images</span></div>
+<div class="status" id="analyzeStatus"><span class="dot"></span><span id="analyzeStatusText">En attente d'images</span></div>
 <div id="subjectDescriptions" style="margin-top:1rem; display:none;">
-<h4 style="font-family:Georgia; color:#6bafc4; margin-bottom:0.5rem; font-size:0.9rem;">Extracted Script (editable):</h4>
+<h4 style="font-family:Georgia; color:#6bafc4; margin-bottom:0.5rem; font-size:0.9rem;">Script extrait (modifiable) :</h4>
 <div id="descriptionsList"></div>
 <div class="row" style="margin-top:.8rem;">
 <input type="number" id="filmLength" value="100" min="10" max="200" style="width:70px;">
 <span style="font-size:.7rem;color:#8a7a5c;align-self:center;">frames</span>
 </div>
-<button class="btn btn-mega" id="generateBtn" style="margin-top:1rem;" disabled>✦ 2. Generate Film (txt→img)</button>
+<button class="btn btn-mega" id="generateBtn" style="margin-top:1rem;" disabled>✦ 2. Générer le Film (txt→img)</button>
 </div>
 </div>
 </section>
 
 <section class="card hidden" id="resultsCard">
-<div class="card-head"><span>🎬 Film Library</span><span class="badge" id="resultsBadge">0 / 100</span></div>
+<div class="card-head"><span>🎬 Bibliothèque Film</span><span class="badge" id="resultsBadge">0 / 100</span></div>
 <div class="card-body">
 <div class="film-timeline" id="filmTimeline"></div>
 <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
@@ -229,9 +229,9 @@ select{cursor:pointer; appearance:none;}
 <div class="batch-info" id="batchInfo"></div>
 
 <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;">
-    <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Download ALL Images (ZIP)</button>
-    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Play Comic Movie</button>
-    <button class="btn btn-rec" id="exportVideoBtn" style="display: none; width: auto; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-family: Georgia, serif;">🎥 Record Movie to Video</button>
+    <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Télécharger TOUTES les images (ZIP)</button>
+    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Lire le Film</button>
+    <button class="btn btn-rec" id="exportVideoBtn" style="display: none; width: auto; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-family: Georgia, serif;">🎥 Enregistrer la Vidéo</button>
 </div>
 
 <div class="grid" id="resultsGrid" style="margin-top: 1.5rem;"></div>
@@ -243,9 +243,9 @@ select{cursor:pointer; appearance:none;}
 <div class="panel">
 <div class="handle" id="panelHandle">
 <span class="toggle" id="panelToggle">▼ CONSOLE</span>
-<span class="latest" id="humanLatest">Ready.</span>
-<button id="copyConsoleBtn">Copy</button>
-<button id="clearConsoleBtn">Clear</button>
+<span class="latest" id="humanLatest">Prêt.</span>
+<button id="copyConsoleBtn">Copier</button>
+<button id="clearConsoleBtn">Effacer</button>
 </div>
 <div class="panel-content hidden" id="panelContent">
 <div class="human-log" id="humanLog"></div>
@@ -254,26 +254,26 @@ select{cursor:pointer; appearance:none;}
 </div>
 
 <div class="toast" id="toast"><span id="toastText">Message</span></div>
-<div class="status-bar" id="statusBar"><div class="spinner"></div><span id="statusText">Preparing…</span></div>
+<div class="status-bar" id="statusBar"><div class="spinner"></div><span id="statusText">Préparation…</span></div>
 
 <!-- OVERLAY CINEMA -->
 <div id="cinemaOverlay" class="hidden">
-    <button id="cinemaClose">✕ Close</button>
+    <button id="cinemaClose">✕ Fermer</button>
     <div id="cinemaImgContainer"><img id="cinemaImg" src="" alt="Film"></div>
     <div id="speechBubble"></div>
 
     <div id="cinemaControls">
         <div class="cine-row">
-            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Voice</label>
-            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Bubbles</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Voix</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Bulles</label>
             <input type="file" id="musicUpload" accept="audio/*" style="display:none;">
-            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Music</button>
-            <span id="musicName" style="font-size:0.8rem; color:#aaa;">None</span>
+            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Musique</button>
+            <span id="musicName" style="font-size:0.8rem; color:#aaa;">Aucune</span>
             <audio id="bgMusic" loop></audio>
         </div>
         <div class="cine-row">
             <button class="cine-btn" id="cinePlayPause">⏸ Pause</button>
-            <span style="font-size:0.8rem;">(Speed is dictated by the voice)</span>
+            <span style="font-size:0.8rem;">(La vitesse est dictée par la voix)</span>
         </div>
     </div>
 </div>
@@ -292,10 +292,10 @@ const ADAPTIVE_DELAY = 5000;
 const WORKER_COUNT = 4;
 
 const STYLES = {
-    Moebius: "Drawn in the style of a 1970s Franco-Belgian sci-fi comic (Moebius, Métal Hurlant). Clean, unbroken 'ligne claire' ink contours with intricate fine cross-hatching for texture. Muted dusty pastel color palette: pale ochre, rose, soft turquoise, pale yellow. Atmospheric perspective, deep silence, surrealism, masterpiece illustration.",
-    Ghibli: "Studio Ghibli animation style, beautiful hand-drawn anime art. Lush green nature, soft lighting, magical atmosphere, warm colors, detailed backgrounds, Hayao Miyazaki masterpiece.",
-    Cyberpunk: "Cyberpunk style, futuristic city, neon lights, dark atmosphere, rain, holographic elements, high tech low life, vivid colors, cinematic lighting, 8k resolution.",
-    Watercolor: "Beautiful watercolor painting, soft edges, bleeding colors, delicate brushstrokes, dreamy atmosphere, light and airy, artistic masterpiece."
+    Moebius: "Dessiné dans le style d'une bande dessinée de science-fiction franco-belge des années 1970 (Moebius, Métal Hurlant). Contours à l'encre 'ligne claire' nets et ininterrompus avec des hachures fines complexes pour la texture. Palette de couleurs pastel poussiéreuses et douces : ocre pâle, rose, turquoise doux, jaune pâle. Perspective atmosphérique, silence profond, surréalisme, chef-d'œuvre d'illustration.",
+    Ghibli: "Style d'animation du Studio Ghibli, belle art anime dessiné à la main. Nature luxuriante, éclairage doux, atmosphère magique, couleurs chaudes, arrière-plans détaillés, chef-d'œuvre de Hayao Miyazaki.",
+    Cyberpunk: "Style cyberpunk, ville futuriste, néons, atmosphère sombre, pluie, éléments holographiques, high tech low life, couleurs vives, éclairage cinématographique, résolution 8k.",
+    Watercolor: "Belle peinture à l'aquarelle, bords doux, couleurs qui bavent, coups de pinceau délicats, atmosphère onirique, légère et aérée, chef-d'œuvre artistique."
 };
 
 const state = {
@@ -308,7 +308,7 @@ const state = {
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const nowTime = () => new Date().toLocaleTimeString('en-US', { hour12: false });
+const nowTime = () => new Date().toLocaleTimeString('fr-FR', { hour12: false });
 const sanitize = t => String(t == null ? '' : t).replace(/[\u2018\u2019\u201B\u2032\u02BC]/g, "'").replace(/[\u201C\u201D\u201F\u2033]/g, '"').replace(/\u2013|\u2014/g, '-').replace(/\u2026/g, '...').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\u00A0|\u202F/g, ' ');
 
 function human(msg) {
@@ -349,9 +349,9 @@ async function quickPing(key) {
 }
 async function validateAndSaveKeys() {
   const raw = $('keysInput').value.split('\n').map(l => l.trim()).filter(l => l.length > 0).filter(l => isValidKey(l));
-  if (raw.length === 0) return toast('No valid keys found', 'error');
-  $('validateBtn').disabled = true; $('validateBtn').textContent = '⚡ Validating…';
-  human(`⚡ Validating ${raw.length} keys…`);
+  if (raw.length === 0) return toast('Aucune clé valide trouvée', 'error');
+  $('validateBtn').disabled = true; $('validateBtn').textContent = '⚡ Validation…';
+  human(`⚡ Validation de ${raw.length} clé(s)…`);
   const results = await Promise.allSettled(raw.map(k => quickPing(k)));
   state.apiKeys = []; state.keyHealth = []; state.keyScores = [];
   results.forEach((r, i) => {
@@ -361,16 +361,16 @@ async function validateAndSaveKeys() {
       state.keyScores.push(100);
     }
   });
-  $('validateBtn').disabled = false; $('validateBtn').textContent = '⚡ Validate & Save';
-  $('keyBadge').textContent = `${state.apiKeys.length} keys`;
+  $('validateBtn').disabled = false; $('validateBtn').textContent = '⚡ Valider & Enregistrer';
+  $('keyBadge').textContent = `${state.apiKeys.length} clé(s)`;
   $('keyStatus').className = state.apiKeys.length > 0 ? 'status ok' : 'status err';
-  $('keyStatusText').textContent = state.apiKeys.length > 0 ? `${state.apiKeys.length} active key(s)` : 'No valid keys';
+  $('keyStatusText').textContent = state.apiKeys.length > 0 ? `${state.apiKeys.length} clé(s) active(s)` : 'Aucune clé valide';
   renderKeysPanel(); updateUI();
 }
 function renderKeysPanel() {
   $('keysPanel').innerHTML = state.apiKeys.map((k, i) => {
     const cls = state.keyHealth[i].consecutiveErrors >= 3 ? 'dead' : (state.keyHealth[i].last429 > 0 ? 'slow' : '');
-    return `<div class="key-chip ${cls}"><span class="dot"></span>key-${i+1} [${k.slice(0,8)}…]</div>`;
+    return `<div class="key-chip ${cls}"><span class="dot"></span>clé-${i+1} [${k.slice(0,8)}…]</div>`;
   }).join('');
 }
 function getBestKey() {
@@ -412,7 +412,7 @@ function compressImg(dataUrl, maxSide) {
   });
 }
 async function handleImageFile(file) {
-  if (!file || !file.type.startsWith('image/')) return toast('Invalid file', 'error');
+  if (!file || !file.type.startsWith('image/')) return toast('Fichier invalide', 'error');
   const dataUrl = await new Promise((res) => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(file); });
   const compressed = await compressImg(dataUrl, 1024);
   state.images.push(compressed); state.imageNames.push(file.name); refreshImagesGrid();
@@ -425,7 +425,7 @@ function refreshImagesGrid() {
     grid.appendChild(slot);
   });
   const addSlot = document.createElement('div'); addSlot.className = 'slot';
-  addSlot.innerHTML = `<input type="file" accept="image/*" multiple><div class="icon">＋</div><div class="txt"><strong>Add</strong></div>`;
+  addSlot.innerHTML = `<input type="file" accept="image/*" multiple><div class="icon">＋</div><div class="txt"><strong>Ajouter</strong></div>`;
   addSlot.querySelector('input').onchange = (e) => { Array.from(e.target.files).forEach(f => handleImageFile(f)); e.target.value = ''; };
   grid.appendChild(addSlot);
   grid.querySelectorAll('[data-rm]').forEach(b => {
@@ -447,7 +447,7 @@ async function apiVision(system, user, imageUrl) {
   await acquireSlot();
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     if (state.stopRequested) { releaseSlot(); throw new Error('Stop'); }
-    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('No active key'); }
+    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé active'); }
     const key = bk.key; const controller = new AbortController(); const tid = setTimeout(() => controller.abort(), VISION_TIMEOUT);
     try {
       const res = await fetch(API_BASE + '/chat/completions', {
@@ -460,7 +460,7 @@ async function apiVision(system, user, imageUrl) {
       if (res.status === 429) { markKeyFail(bk.idx, true); await sleep(ADAPTIVE_DELAY * (attempt + 1)); continue; }
       if (!res.ok) { markKeyFail(bk.idx, false); await sleep(2000); continue; }
       markKeySuccess(bk.idx); releaseSlot(); const d = await res.json();
-      const content = d.choices?.[0]?.message?.content; if (!content) throw new Error('Empty'); return content;
+      const content = d.choices?.[0]?.message?.content; if (!content) throw new Error('Vide'); return content;
     } catch (e) {
       clearTimeout(tid);
       if (e.name === 'AbortError') { markKeyFail(bk.idx, false); await sleep(1000); continue; }
@@ -468,7 +468,7 @@ async function apiVision(system, user, imageUrl) {
       await sleep(1000);
     }
   }
-  releaseSlot(); throw new Error('Vision failed');
+  releaseSlot(); throw new Error('Échec de la visionneuse');
 }
 
 async function apiImageGenerate(prompt) {
@@ -476,7 +476,7 @@ async function apiImageGenerate(prompt) {
   const format = $('formatSelect').value;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     if (state.stopRequested) { releaseSlot(); throw new Error('Stop'); }
-    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('No active key'); }
+    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé active'); }
     const key = bk.key; const controller = new AbortController(); const tid = setTimeout(() => controller.abort(), IMAGE_TIMEOUT);
     try {
       const res = await fetch(API_BASE + '/images/generations', {
@@ -499,7 +499,7 @@ async function apiImageGenerate(prompt) {
       await sleep(3000);
     }
   }
-  releaseSlot(); throw new Error('Generation failed');
+  releaseSlot(); throw new Error('Échec de la génération');
 }
 
 function buildFilmPrompts(subjects, totalFrames) {
@@ -507,22 +507,22 @@ function buildFilmPrompts(subjects, totalFrames) {
   const currentStyleText = STYLES[$('styleSelect').value] || STYLES.Moebius;
   for (let i = 0; i < totalFrames; i++) {
     const act = Math.floor(i / perAct);
-    const actName = ['Opening', 'Rising Action', 'Climax', 'Falling Action', 'Resolution'][act] || `Act ${act + 1}`;
+    const actName = ['Ouverture', 'Montée en tension', 'Point de bascule', 'Résolution', 'Dénouement'][act] || `Acte ${act + 1}`;
     const subject = subjects[i % subjects.length];
     const narrativeBeats = [
-      `Close-up establishing shot, ${subject}.`,
-      `Medium shot, ${subject}.`,
-      `Wide cinematic framing, ${subject}.`,
-      `Dynamic composition, ${subject}.`,
-      `Climactic wide shot, ${subject}.`,
-      `Intimate detail, ${subject}.`,
-      `Panoramic vista, ${subject}.`,
-      `Reveal shot, ${subject}.`,
-      `Transition frame, ${subject}.`,
-      `Heroic pose, ${subject}.`
+      `Plan rapproché d'établissement, ${subject}.`,
+      `Plan moyen, ${subject}.`,
+      `Cadrage cinématographique large, ${subject}.`,
+      `Composition dynamique, ${subject}.`,
+      `Plan large culminant, ${subject}.`,
+      `Détail intime, ${subject}.`,
+      `Vue panoramique, ${subject}.`,
+      `Plan de révélation, ${subject}.`,
+      `Image de transition, ${subject}.`,
+      `Pose héroïque, ${subject}.`
     ];
     const beat = narrativeBeats[i % narrativeBeats.length];
-    const prompt = `${currentStyleText} Cinematic frame ${i + 1}/${totalFrames}, Act: ${actName}. ${beat}`;
+    const prompt = `${currentStyleText} Image cinématographique ${i + 1}/${totalFrames}, Acte : ${actName}. ${beat}`;
     prompts.push({ prompt, act: actName, subject, frame: i + 1 });
   }
   return prompts;
@@ -533,20 +533,20 @@ async function analyzeImages() {
   $('analyzeBtn').disabled = true; $('subjectDescriptions').style.display = 'none';
   state.subjects = [];
   
-  // NEW PROMPT: Context-aware translation and scriptwriting
-  const sysPrompt = "You are a comic book scriptwriter. Analyze the image. If there is text (like French speech bubbles), read it, translate its meaning, and write a SHORT, punchy English sentence (max 8 words). If there is no text, write a dramatic 1-sentence English caption about industrial machining or the worker's action. Output ONLY the English text.";
+  // PROMPT OPTIMISÉ POUR LE FRANÇAIS ET LE CONTEXTE
+  const sysPrompt = "Tu es un scénariste de bande dessinée. Analyse l'image. S'il y a du texte (comme des bulles de BD françaises sur l'usinage), lis-le et résume l'idée principale. Écris UNE phrase courte et percutante en FRANÇAIS (maximum 8 mots). S'il n'y a pas de texte, décris l'action de l'ouvrier en une phrase dramatique. Ne réponds QUE par le texte en français.";
   
-  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "What is the script for this scene?", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
+  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Quel est le script de cette scène ?", img).then(desc => desc.trim()).catch(e => "Une scène mystérieuse."));
   const descs = await Promise.allSettled(tasks);
   descs.forEach((d, i) => { 
-      let text = d.status === 'fulfilled' ? d.value : "A mysterious scene.";
+      let text = d.status === 'fulfilled' ? d.value : "Une scène mystérieuse.";
       text = text.replace(/[#*_\[\]]/g, '').trim();
       let words = text.split(' ');
       if (words.length > 8) text = words.slice(0, 8).join(' ') + '...';
       state.subjects.push(text); 
   });
   renderDescriptions(); $('analyzeStatus').className = 'status ok';
-  $('analyzeStatusText').textContent = `${state.subjects.length} script lines extracted.`;
+  $('analyzeStatusText').textContent = `${state.subjects.length} scènes extraites.`;
   $('subjectDescriptions').style.display = 'block';
   updateUI();
 }
@@ -554,7 +554,7 @@ function renderDescriptions() {
   const list = $('descriptionsList'); list.innerHTML = '';
   state.subjects.forEach((sub, i) => {
     const div = document.createElement('div'); div.style.marginBottom = '0.6rem';
-    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Scene ${i + 1}:</label>
+    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Scène ${i + 1} :</label>
       <textarea class="subject-input" data-idx="${i}" style="min-height:50px;font-size:0.72rem;">${esc(sub)}</textarea>`;
     list.appendChild(div);
   });
@@ -614,13 +614,13 @@ async function generateSingleFrame(idx) {
         if (card) {
             card.className = 'photo done';
             card.querySelector('.photo-img').innerHTML = `<img src="${url}" loading="lazy">`;
-            card.querySelector('.ptitle').innerHTML = `<span>Frame ${idx + 1}</span> <button class="btn btn-red" onclick="regenerateFrame(${idx})">🔄 Redo</button>`;
-            card.querySelector('.photo-meta').innerHTML += `<a href="${url}" target="_blank" download class="popen">Download</a>`;
+            card.querySelector('.ptitle').innerHTML = `<span>Frame ${idx + 1}</span> <button class="btn btn-red" onclick="regenerateFrame(${idx})">🔄 Refaire</button>`;
+            card.querySelector('.photo-meta').innerHTML += `<a href="${url}" target="_blank" download class="popen">Télécharger</a>`;
         }
         if (tf) tf.className = 'frame done';
     } catch (e) {
         res.status = 'error';
-        if (card) { card.className = 'photo error'; card.querySelector('.photo-img').innerHTML = `<div class="err">✕ Failed</div>`; }
+        if (card) { card.className = 'photo error'; card.querySelector('.photo-img').innerHTML = `<div class="err">✕ Échec</div>`; }
         if (tf) tf.className = 'frame error';
     }
     updateProgress();
@@ -642,12 +642,12 @@ function updateProgress() {
   $('progressPct').textContent = `${pct}%`; $('resultsBadge').textContent = `${done} / ${total}`;
 }
 function updateBatchInfo(total) {
-  $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> scenes</span><span><strong>${state.apiKeys.length}</strong> keys</span>`;
+  $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> scènes</span><span><strong>${state.apiKeys.length}</strong> clés</span>`;
 }
 
 // ZIP
 document.getElementById('downloadAllBtn').onclick = async () => {
-    const btn = document.getElementById('downloadAllBtn'); btn.textContent = '⏳ Zipping...'; btn.disabled = true;
+    const btn = document.getElementById('downloadAllBtn'); btn.textContent = '⏳ Création du ZIP...'; btn.disabled = true;
     const zip = new JSZip(); const folder = zip.folder("film");
     let count = 0;
     for (let i = 0; i < state.results.length; i++) {
@@ -659,11 +659,11 @@ document.getElementById('downloadAllBtn').onclick = async () => {
         }
     }
     const content = await zip.generateAsync({type: "blob"}); saveAs(content, "film.zip");
-    btn.textContent = '📥 Download ALL Images (ZIP)'; btn.disabled = false;
+    btn.textContent = '📥 Télécharger TOUTES les images (ZIP)'; btn.disabled = false;
 };
 
 // ==========================================
-// MODE CINEMA (V10) 
+// MODE CINEMA (V11) - VOIX FRANÇAISE
 // ==========================================
 let cineTimeout = null;
 let cineIdx = 0;
@@ -697,7 +697,7 @@ function playCineFrame() {
     imgEl.style.animation = 'kenburns 8s ease-out forwards'; 
     
     // 2. Clean Text for Bubble
-    let textForBubble = currentImg.subject || "A scene unfolds...";
+    let textForBubble = currentImg.subject || "Une scène se déroule...";
     textForBubble = textForBubble.replace(/[#*_\[\]]/g, '').trim();
     let words = textForBubble.split(' ');
     if (words.length > 8) textForBubble = words.slice(0, 8).join(' ') + '...';
@@ -716,11 +716,10 @@ function playCineFrame() {
     const advance = () => {
         if (!cinePlaying) return;
         
-        // V10 FIX: If recording, stop cleanly at the end. Do not loop.
         if (cineIdx >= imagesList.length - 1 && isRecording) {
             cinePlaying = false;
-            $('cinePlayPause').textContent = '▶ Play';
-            toast("Recording finished. Click 'Stop Sharing' in your browser bar.", "success", 8000);
+            $('cinePlayPause').textContent = '▶ Lire';
+            toast("Enregistrement terminé. Cliquez sur 'Arrêter le partage' dans votre navigateur.", "success", 8000);
             return; 
         }
 
@@ -737,7 +736,7 @@ function playCineFrame() {
     if ($('voiceToggle').checked && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(textForBubble);
-        utterance.lang = 'en-US';
+        utterance.lang = 'fr-FR'; // VOIX FRANÇAISE
         utterance.rate = 0.9; 
         
         let voiceFinished = false;
@@ -767,7 +766,7 @@ $('cinemaClose').onclick = () => {
 
 $('cinePlayPause').onclick = () => {
     cinePlaying = !cinePlaying;
-    $('cinePlayPause').textContent = cinePlaying ? '⏸ Pause' : '▶ Play';
+    $('cinePlayPause').textContent = cinePlaying ? '⏸ Pause' : '▶ Lire';
     if(cinePlaying) { 
         playCineFrame(); 
     } else { 
@@ -790,7 +789,7 @@ $('bgMusic').onplay = () => {
 };
 
 // ==========================================
-// EXPORT VIDEO (V10) - SCREEN RECORDING
+// EXPORT VIDEO (V11) 
 // ==========================================
 document.getElementById('exportVideoBtn').onclick = async () => {
     try {
@@ -808,8 +807,8 @@ document.getElementById('exportVideoBtn').onclick = async () => {
 
         mediaRecorder.onstop = () => {
             const blob = new Blob(recordedChunks, { type: 'video/webm' });
-            saveAs(blob, "comic_movie.webm");
-            toast("Video saved successfully!", "success", 5000);
+            saveAs(blob, "film_francais.webm");
+            toast("Vidéo sauvegardée avec succès !", "success", 5000);
             isRecording = false;
             cinePlaying = false;
             clearTimeout(cineTimeout);
@@ -823,7 +822,7 @@ document.getElementById('exportVideoBtn').onclick = async () => {
 
         imagesList = state.results.filter(r => r.url);
         if (imagesList.length === 0) {
-            toast("No images to record.", "error");
+            toast("Aucune image à enregistrer.", "error");
             stopRecording();
             return;
         }
@@ -833,12 +832,12 @@ document.getElementById('exportVideoBtn').onclick = async () => {
         
         setTimeout(() => {
             playCineFrame();
-            toast("Recording started. The video will stop at the end.", "warn", 5000);
+            toast("Enregistrement lancé. La vidéo s'arrêtera à la fin.", "warn", 5000);
         }, 500);
 
     } catch (err) {
         console.error(err);
-        toast("Screen capture cancelled.", "error");
+        toast("Capture d'écran annulée.", "error");
     }
 };
 
@@ -858,18 +857,18 @@ function updateUI() {
   $('generateBtn').disabled = !hasKeys || !hasSubjects;
 }
 $('validateBtn').onclick = validateAndSaveKeys;
-$('clearKeysBtn').onclick = () => { state.apiKeys = []; state.keyHealth = []; state.keyScores = []; $('keysInput').value = ''; $('keyBadge').textContent = '0 keys'; $('keyStatus').className = 'status'; $('keyStatusText').textContent = 'No keys saved'; $('keysPanel').innerHTML = ''; updateUI(); };
+$('clearKeysBtn').onclick = () => { state.apiKeys = []; state.keyHealth = []; state.keyScores = []; $('keysInput').value = ''; $('keyBadge').textContent = '0 clé'; $('keyStatus').className = 'status'; $('keyStatusText').textContent = 'Aucune clé enregistrée'; $('keysPanel').innerHTML = ''; updateUI(); };
 $('addImageBtn').onclick = () => { const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.multiple = true; input.onchange = (e) => { Array.from(e.target.files).forEach(f => handleImageFile(f)); }; input.click(); };
 $('analyzeBtn').onclick = analyzeImages;
 $('generateBtn').onclick = generateFilm;
 
 const handle = $('panelHandle'), content = $('panelContent'); let open = false;
 handle.onclick = () => { open = !open; content.classList.toggle('hidden', !open); $('panelToggle').textContent = (open ? '▲' : '▼') + ' CONSOLE'; };
-$('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugLog.map(e => `[${e.t}] ${e.m}`).join('\n')).then(() => toast('Copied')); };
+$('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugLog.map(e => `[${e.t}] ${e.m}`).join('\n')).then(() => toast('Copié')); };
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ V10 Studio ready.');
+human('✦ Studio V11 prêt.');
 </script>
 </body>
 </html>
