@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V6 — Ultimate</title>
+<title>Moebius Film Generator V7 — English Comic</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -149,33 +149,33 @@ select{cursor:pointer; appearance:none;}
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V6 ✦</div>
-<h1>Studio Comic Animé</h1>
-<p class="sub">Bulles BD · Voix Synthétiques · Zoom Caméra · Export Vidéo</p>
+<div class="kata">✦ Moebius Film Generator V7 ✦</div>
+<h1>English Comic Studio</h1>
+<p class="sub">Comic Bubbles · Voice Sync · Camera Zoom · Video Export</p>
 </header>
 
 <div class="banner">
-<strong>Version 6 :</strong> La voix lit maintenant le texte exact des bulles, le générateur est plus stable (moins d'échecs), et l'exportation vidéo ne bloque plus.
+<strong>V7 Updates:</strong> Interface fully in English. AI generates short English sentences. The image stays on screen until the voice finishes reading the bubble.
 </div>
 
 <section class="card">
-<div class="card-head"><span>⚙️ Options de Création</span></div>
+<div class="card-head"><span>⚙️ Creation Options</span></div>
 <div class="card-body">
     <div class="options-grid">
         <div>
-            <label class="hint" style="margin-top:0;">Style Visuel</label>
+            <label class="hint" style="margin-top:0;">Visual Style</label>
             <select id="styleSelect">
-                <option value="Moebius">Moebius (BD SF franco-belge)</option>
-                <option value="Ghibli">Ghibli (Animation japonaise douce)</option>
-                <option value="Cyberpunk" selected>Cyberpunk (Néon, sombre)</option>
-                <option value="Watercolor">Aquarelle (Peinture douce)</option>
+                <option value="Moebius">Moebius (Franco-Belgian Sci-Fi)</option>
+                <option value="Ghibli">Ghibli (Soft Anime)</option>
+                <option value="Cyberpunk" selected>Cyberpunk (Neon, Dark)</option>
+                <option value="Watercolor">Watercolor (Soft Painting)</option>
             </select>
         </div>
         <div>
-            <label class="hint" style="margin-top:0;">Format d'image</label>
+            <label class="hint" style="margin-top:0;">Image Format</label>
             <select id="formatSelect">
-                <option value="1024x1792">Portrait (9:16) - Idéal Réseaux</option>
-                <option value="1792x1024">Paysage (16:9) - Idéal Cinéma</option>
+                <option value="1024x1792">Portrait (9:16) - Social Media</option>
+                <option value="1792x1024">Landscape (16:9) - Cinema</option>
             </select>
         </div>
     </div>
@@ -183,43 +183,43 @@ select{cursor:pointer; appearance:none;}
 </section>
 
 <section class="card">
-<div class="card-head"><span>🔑 Clés API (Multi-Key Optimisé)</span><span class="badge" id="keyBadge">0 clés</span></div>
+<div class="card-head"><span>🔑 API Keys (Multi-Key)</span><span class="badge" id="keyBadge">0 keys</span></div>
 <div class="card-body">
-<textarea id="keysInput" placeholder="Collez vos clés API ici, une par ligne..." autocomplete="off" spellcheck="false"></textarea>
+<textarea id="keysInput" placeholder="Paste your API keys here, one per line..." autocomplete="off" spellcheck="false"></textarea>
 <div class="row">
-<button class="btn btn-amber" id="validateBtn">⚡ Valider (parallèle)</button>
-<button class="btn btn-slate" id="clearKeysBtn" style="width:auto;min-width:80px;">Effacer</button>
+<button class="btn btn-amber" id="validateBtn">⚡ Validate & Save</button>
+<button class="btn btn-slate" id="clearKeysBtn" style="width:auto;min-width:80px;">Clear</button>
 </div>
 <div class="keys-panel" id="keysPanel"></div>
-<div class="status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">Aucune clé enregistrée</span></div>
+<div class="status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">No keys saved</span></div>
 </div>
 </section>
 
 <section class="card">
-<div class="card-head"><span>🖼️ Images de Référence (Sujets du Film)</span><span class="badge" id="refBadge">0 image</span></div>
+<div class="card-head"><span>🖼️ Reference Images (Film Subjects)</span><span class="badge" id="refBadge">0 image</span></div>
 <div class="card-body">
 <div class="images-grid" id="imagesGrid"></div>
 <div class="row" style="margin-top:.2rem;">
-<button class="btn btn-slate" id="addImageBtn" style="flex:1;">＋ Ajouter une image</button>
+<button class="btn btn-slate" id="addImageBtn" style="flex:1;">＋ Add Image</button>
 </div>
 <div class="row">
-<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extraire les Sujets</button>
+<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extract Subjects</button>
 </div>
-<div class="status" id="analyzeStatus"><span class="dot"></span><span id="analyzeStatusText">En attente d'images</span></div>
+<div class="status" id="analyzeStatus"><span class="dot"></span><span id="analyzeStatusText">Waiting for images</span></div>
 <div id="subjectDescriptions" style="margin-top:1rem; display:none;">
-<h4 style="font-family:Georgia; color:#6bafc4; margin-bottom:0.5rem; font-size:0.9rem;">Sujets extraits (modifiables) :</h4>
+<h4 style="font-family:Georgia; color:#6bafc4; margin-bottom:0.5rem; font-size:0.9rem;">Extracted Subjects (editable):</h4>
 <div id="descriptionsList"></div>
 <div class="row" style="margin-top:.8rem;">
 <input type="number" id="filmLength" value="100" min="10" max="200" style="width:70px;">
 <span style="font-size:.7rem;color:#8a7a5c;align-self:center;">frames</span>
 </div>
-<button class="btn btn-mega" id="generateBtn" style="margin-top:1rem;" disabled>✦ 2. Générer le Film (txt→img)</button>
+<button class="btn btn-mega" id="generateBtn" style="margin-top:1rem;" disabled>✦ 2. Generate Film (txt→img)</button>
 </div>
 </div>
 </section>
 
 <section class="card hidden" id="resultsCard">
-<div class="card-head"><span>🎬 Bibliothèque Film</span><span class="badge" id="resultsBadge">0 / 100</span></div>
+<div class="card-head"><span>🎬 Film Library</span><span class="badge" id="resultsBadge">0 / 100</span></div>
 <div class="card-body">
 <div class="film-timeline" id="filmTimeline"></div>
 <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
@@ -227,9 +227,9 @@ select{cursor:pointer; appearance:none;}
 <div class="batch-info" id="batchInfo"></div>
 
 <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;">
-    <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Télécharger TOUTES les images (ZIP)</button>
-    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Lancer le Comic Animé</button>
-    <button class="btn btn-amber" id="exportVideoBtn" style="display: none; width: auto; padding: 0.75rem 2rem; background: linear-gradient(135deg, #10b981, #34d399); color: #000;">🎥 Exporter en Vidéo (.webm)</button>
+    <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Download ALL Images (ZIP)</button>
+    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Play Comic Movie</button>
+    <button class="btn btn-amber" id="exportVideoBtn" style="display: none; width: auto; padding: 0.75rem 2rem; background: linear-gradient(135deg, #10b981, #34d399); color: #000;">🎥 Export as Video (.webm)</button>
 </div>
 
 <div class="grid" id="resultsGrid" style="margin-top: 1.5rem;"></div>
@@ -241,9 +241,9 @@ select{cursor:pointer; appearance:none;}
 <div class="panel">
 <div class="handle" id="panelHandle">
 <span class="toggle" id="panelToggle">▼ CONSOLE</span>
-<span class="latest" id="humanLatest">Prêt.</span>
-<button id="copyConsoleBtn">Copier</button>
-<button id="clearConsoleBtn">Effacer</button>
+<span class="latest" id="humanLatest">Ready.</span>
+<button id="copyConsoleBtn">Copy</button>
+<button id="clearConsoleBtn">Clear</button>
 </div>
 <div class="panel-content hidden" id="panelContent">
 <div class="human-log" id="humanLog"></div>
@@ -252,27 +252,26 @@ select{cursor:pointer; appearance:none;}
 </div>
 
 <div class="toast" id="toast"><span id="toastText">Message</span></div>
-<div class="status-bar" id="statusBar"><div class="spinner"></div><span id="statusText">Préparation…</span></div>
+<div class="status-bar" id="statusBar"><div class="spinner"></div><span id="statusText">Preparing…</span></div>
 
 <!-- OVERLAY CINEMA -->
 <div id="cinemaOverlay" class="hidden">
-    <button id="cinemaClose">✕ Quitter</button>
+    <button id="cinemaClose">✕ Close</button>
     <div id="cinemaImgContainer"><img id="cinemaImg" src="" alt="Film"></div>
     <div id="speechBubble"></div>
 
     <div id="cinemaControls">
         <div class="cine-row">
-            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Voix</label>
-            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Bulles</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Voice</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Bubbles</label>
             <input type="file" id="musicUpload" accept="audio/*" style="display:none;">
-            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Musique</button>
-            <span id="musicName" style="font-size:0.8rem; color:#aaa;">Aucune</span>
+            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Music</button>
+            <span id="musicName" style="font-size:0.8rem; color:#aaa;">None</span>
             <audio id="bgMusic" loop></audio>
         </div>
         <div class="cine-row">
             <button class="cine-btn" id="cinePlayPause">⏸ Pause</button>
-            <span>Vitesse : <span id="fpsValue">2</span> fps</span>
-            <input type="range" id="cineSpeed" min="1" max="15" value="2" style="width:150px;">
+            <span style="font-size:0.8rem;">(If Voice is ON, speed is dictated by the voice)</span>
         </div>
     </div>
 </div>
@@ -283,11 +282,11 @@ select{cursor:pointer; appearance:none;}
 const API_BASE = 'https://apihub.agnes-ai.com/v1';
 const MODEL_TEXT = 'agnes-2.5-flash';
 const MODEL_IMAGE = 'agnes-image-2.5-flash';
-const MAX_CONCURRENT = 4; // Réduit pour éviter le Rate Limit de l'API
+const MAX_CONCURRENT = 4; 
 const MAX_ATTEMPTS = 10;
 const VISION_TIMEOUT = 60000;
 const IMAGE_TIMEOUT = 180000;
-const ADAPTIVE_DELAY = 5000; // Augmenté en cas de 429
+const ADAPTIVE_DELAY = 5000;
 const WORKER_COUNT = 4;
 
 const STYLES = {
@@ -307,7 +306,7 @@ const state = {
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const nowTime = () => new Date().toLocaleTimeString('fr-FR', { hour12: false });
+const nowTime = () => new Date().toLocaleTimeString('en-US', { hour12: false });
 const sanitize = t => String(t == null ? '' : t).replace(/[\u2018\u2019\u201B\u2032\u02BC]/g, "'").replace(/[\u201C\u201D\u201F\u2033]/g, '"').replace(/\u2013|\u2014/g, '-').replace(/\u2026/g, '...').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\u00A0|\u202F/g, ' ');
 
 function human(msg) {
@@ -348,9 +347,9 @@ async function quickPing(key) {
 }
 async function validateAndSaveKeys() {
   const raw = $('keysInput').value.split('\n').map(l => l.trim()).filter(l => l.length > 0).filter(l => isValidKey(l));
-  if (raw.length === 0) return toast('Aucune clé valide', 'error');
-  $('validateBtn').disabled = true; $('validateBtn').textContent = '⚡ Validation…';
-  human(`⚡ Validation de ${raw.length} clés…`);
+  if (raw.length === 0) return toast('No valid keys found', 'error');
+  $('validateBtn').disabled = true; $('validateBtn').textContent = '⚡ Validating…';
+  human(`⚡ Validating ${raw.length} keys…`);
   const results = await Promise.allSettled(raw.map(k => quickPing(k)));
   state.apiKeys = []; state.keyHealth = []; state.keyScores = [];
   results.forEach((r, i) => {
@@ -360,10 +359,10 @@ async function validateAndSaveKeys() {
       state.keyScores.push(100);
     }
   });
-  $('validateBtn').disabled = false; $('validateBtn').textContent = '⚡ Valider et enregistrer';
-  $('keyBadge').textContent = `${state.apiKeys.length} clés`;
+  $('validateBtn').disabled = false; $('validateBtn').textContent = '⚡ Validate & Save';
+  $('keyBadge').textContent = `${state.apiKeys.length} keys`;
   $('keyStatus').className = state.apiKeys.length > 0 ? 'status ok' : 'status err';
-  $('keyStatusText').textContent = state.apiKeys.length > 0 ? `${state.apiKeys.length} clé(s) active(s)` : 'Aucune clé valide';
+  $('keyStatusText').textContent = state.apiKeys.length > 0 ? `${state.apiKeys.length} active key(s)` : 'No valid keys';
   renderKeysPanel(); updateUI();
 }
 function renderKeysPanel() {
@@ -411,7 +410,7 @@ function compressImg(dataUrl, maxSide) {
   });
 }
 async function handleImageFile(file) {
-  if (!file || !file.type.startsWith('image/')) return toast('Fichier invalide', 'error');
+  if (!file || !file.type.startsWith('image/')) return toast('Invalid file', 'error');
   const dataUrl = await new Promise((res) => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(file); });
   const compressed = await compressImg(dataUrl, 1024);
   state.images.push(compressed); state.imageNames.push(file.name); refreshImagesGrid();
@@ -424,7 +423,7 @@ function refreshImagesGrid() {
     grid.appendChild(slot);
   });
   const addSlot = document.createElement('div'); addSlot.className = 'slot';
-  addSlot.innerHTML = `<input type="file" accept="image/*" multiple><div class="icon">＋</div><div class="txt"><strong>Ajouter</strong></div>`;
+  addSlot.innerHTML = `<input type="file" accept="image/*" multiple><div class="icon">＋</div><div class="txt"><strong>Add</strong></div>`;
   addSlot.querySelector('input').onchange = (e) => { Array.from(e.target.files).forEach(f => handleImageFile(f)); e.target.value = ''; };
   grid.appendChild(addSlot);
   grid.querySelectorAll('[data-rm]').forEach(b => {
@@ -446,7 +445,7 @@ async function apiVision(system, user, imageUrl) {
   await acquireSlot();
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     if (state.stopRequested) { releaseSlot(); throw new Error('Stop'); }
-    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé'); }
+    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('No active key'); }
     const key = bk.key; const controller = new AbortController(); const tid = setTimeout(() => controller.abort(), VISION_TIMEOUT);
     try {
       const res = await fetch(API_BASE + '/chat/completions', {
@@ -459,7 +458,7 @@ async function apiVision(system, user, imageUrl) {
       if (res.status === 429) { markKeyFail(bk.idx, true); await sleep(ADAPTIVE_DELAY * (attempt + 1)); continue; }
       if (!res.ok) { markKeyFail(bk.idx, false); await sleep(2000); continue; }
       markKeySuccess(bk.idx); releaseSlot(); const d = await res.json();
-      const content = d.choices?.[0]?.message?.content; if (!content) throw new Error('Vide'); return content;
+      const content = d.choices?.[0]?.message?.content; if (!content) throw new Error('Empty'); return content;
     } catch (e) {
       clearTimeout(tid);
       if (e.name === 'AbortError') { markKeyFail(bk.idx, false); await sleep(1000); continue; }
@@ -467,7 +466,7 @@ async function apiVision(system, user, imageUrl) {
       await sleep(1000);
     }
   }
-  releaseSlot(); throw new Error('Échec vision');
+  releaseSlot(); throw new Error('Vision failed');
 }
 
 async function apiImageGenerate(prompt) {
@@ -475,7 +474,7 @@ async function apiImageGenerate(prompt) {
   const format = $('formatSelect').value;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     if (state.stopRequested) { releaseSlot(); throw new Error('Stop'); }
-    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé'); }
+    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('No active key'); }
     const key = bk.key; const controller = new AbortController(); const tid = setTimeout(() => controller.abort(), IMAGE_TIMEOUT);
     try {
       const res = await fetch(API_BASE + '/images/generations', {
@@ -485,7 +484,6 @@ async function apiImageGenerate(prompt) {
       });
       clearTimeout(tid);
       if (res.status === 401 || res.status === 403) { markKeyFail(bk.idx, false); await sleep(500); continue; }
-      // Si on atteint la limite, on attend plus longtemps
       if (res.status === 429 || res.status === 503) { markKeyFail(bk.idx, true); await sleep(ADAPTIVE_DELAY + (attempt * 2000)); continue; }
       if (!res.ok) { markKeyFail(bk.idx, false); if (attempt === MAX_ATTEMPTS - 1) { releaseSlot(); throw new Error(`HTTP ${res.status}`); } await sleep(3000); continue; }
       markKeySuccess(bk.idx); const d = await res.json(); const item = d.data?.[0];
@@ -499,7 +497,7 @@ async function apiImageGenerate(prompt) {
       await sleep(3000);
     }
   }
-  releaseSlot(); throw new Error('Échec génération');
+  releaseSlot(); throw new Error('Generation failed');
 }
 
 function buildFilmPrompts(subjects, totalFrames) {
@@ -507,13 +505,13 @@ function buildFilmPrompts(subjects, totalFrames) {
   const currentStyleText = STYLES[$('styleSelect').value] || STYLES.Moebius;
   for (let i = 0; i < totalFrames; i++) {
     const act = Math.floor(i / perAct);
-    const actName = ['Ouverture', 'Montée en tension', 'Point de bascule', 'Résolution', 'Dénouement'][act] || `Acte ${act + 1}`;
+    const actName = ['Opening', 'Rising Action', 'Climax', 'Falling Action', 'Resolution'][act] || `Act ${act + 1}`;
     const subject = subjects[i % subjects.length];
     const narrativeBeats = [
       `Close-up establishing shot, ${subject}.`,
-      `Medium shot, ${subject}. A figure moves.`,
+      `Medium shot, ${subject}.`,
       `Wide cinematic framing, ${subject}.`,
-      `Dynamic composition, ${subject}. Tension builds.`,
+      `Dynamic composition, ${subject}.`,
       `Climactic wide shot, ${subject}.`,
       `Intimate detail, ${subject}.`,
       `Panoramic vista, ${subject}.`,
@@ -532,12 +530,14 @@ async function analyzeImages() {
   if (state.images.length === 0) return;
   $('analyzeBtn').disabled = true; $('subjectDescriptions').style.display = 'none';
   state.subjects = [];
-  const sysPrompt = "Describe the physical narrative content (characters, objects, environment). Keep under 30 words.";
-  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Extract the narrative content.", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
+  // FORCE ENGLISH AND SHORT SENTENCES
+  const sysPrompt = "You are a comic book scriptwriter. Describe the visual scene in exactly ONE short English sentence (maximum 12 words). Do NOT use markdown, titles, hashtags, or special characters. Just the plain text.";
+  
+  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Describe this scene.", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
   const descs = await Promise.allSettled(tasks);
   descs.forEach((d, i) => { state.subjects.push(d.status === 'fulfilled' ? d.value : "A mysterious scene."); });
   renderDescriptions(); $('analyzeStatus').className = 'status ok';
-  $('analyzeStatusText').textContent = `${state.subjects.length} sujets extraits.`;
+  $('analyzeStatusText').textContent = `${state.subjects.length} subjects extracted.`;
   $('subjectDescriptions').style.display = 'block';
   updateUI();
 }
@@ -545,7 +545,7 @@ function renderDescriptions() {
   const list = $('descriptionsList'); list.innerHTML = '';
   state.subjects.forEach((sub, i) => {
     const div = document.createElement('div'); div.style.marginBottom = '0.6rem';
-    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Sujet ${i + 1} :</label>
+    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Subject ${i + 1}:</label>
       <textarea class="subject-input" data-idx="${i}" style="min-height:50px;font-size:0.72rem;">${esc(sub)}</textarea>`;
     list.appendChild(div);
   });
@@ -605,13 +605,13 @@ async function generateSingleFrame(idx) {
         if (card) {
             card.className = 'photo done';
             card.querySelector('.photo-img').innerHTML = `<img src="${url}" loading="lazy">`;
-            card.querySelector('.ptitle').innerHTML = `<span>Frame ${idx + 1}</span> <button class="btn btn-red" onclick="regenerateFrame(${idx})">🔄 Refaire</button>`;
-            card.querySelector('.photo-meta').innerHTML += `<a href="${url}" target="_blank" download class="popen">Télécharger</a>`;
+            card.querySelector('.ptitle').innerHTML = `<span>Frame ${idx + 1}</span> <button class="btn btn-red" onclick="regenerateFrame(${idx})">🔄 Redo</button>`;
+            card.querySelector('.photo-meta').innerHTML += `<a href="${url}" target="_blank" download class="popen">Download</a>`;
         }
         if (tf) tf.className = 'frame done';
     } catch (e) {
         res.status = 'error';
-        if (card) { card.className = 'photo error'; card.querySelector('.photo-img').innerHTML = `<div class="err">✕ Échec</div>`; }
+        if (card) { card.className = 'photo error'; card.querySelector('.photo-img').innerHTML = `<div class="err">✕ Failed</div>`; }
         if (tf) tf.className = 'frame error';
     }
     updateProgress();
@@ -633,12 +633,12 @@ function updateProgress() {
   $('progressPct').textContent = `${pct}%`; $('resultsBadge').textContent = `${done} / ${total}`;
 }
 function updateBatchInfo(total) {
-  $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> sujets</span><span><strong>${state.apiKeys.length}</strong> clés</span>`;
+  $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> subjects</span><span><strong>${state.apiKeys.length}</strong> keys</span>`;
 }
 
 // ZIP
 document.getElementById('downloadAllBtn').onclick = async () => {
-    const btn = document.getElementById('downloadAllBtn'); btn.textContent = '⏳ Préparation...'; btn.disabled = true;
+    const btn = document.getElementById('downloadAllBtn'); btn.textContent = '⏳ Zipping...'; btn.disabled = true;
     const zip = new JSZip(); const folder = zip.folder("film");
     let count = 0;
     for (let i = 0; i < state.results.length; i++) {
@@ -650,15 +650,14 @@ document.getElementById('downloadAllBtn').onclick = async () => {
         }
     }
     const content = await zip.generateAsync({type: "blob"}); saveAs(content, "film.zip");
-    btn.textContent = '📥 Télécharger ZIP'; btn.disabled = false;
+    btn.textContent = '📥 Download ALL Images (ZIP)'; btn.disabled = false;
 };
 
 // ==========================================
-// MODE CINEMA (V6) - VOIX SYNCHRONISÉE
+// MODE CINEMA (V7) - SYNCHRONIZED TIMING
 // ==========================================
-let cineInterval = null;
+let cineTimeout = null;
 let cineIdx = 0;
-let cineFps = 2; 
 let cinePlaying = false;
 let imagesList = [];
 
@@ -668,14 +667,12 @@ document.getElementById('playMovieBtn').onclick = () => {
     
     $('cinemaOverlay').classList.remove('hidden');
     cineIdx = 0; cinePlaying = true;
-    $('cineSpeed').value = 2; $('fpsValue').textContent = 2;
     $('cinePlayPause').textContent = '⏸ Pause';
-
     playCineFrame();
 };
 
 function playCineFrame() {
-    clearInterval(cineInterval);
+    clearTimeout(cineTimeout); // Clear any pending advance
     if (!imagesList[cineIdx]) return;
 
     const currentImg = imagesList[cineIdx];
@@ -686,11 +683,11 @@ function playCineFrame() {
     $('cinemaImg').src = currentImg.url;
     $('cinemaImg').style.animation = 'kenburns 12s ease-in-out infinite alternate';
     
-    // 2. Texte de la bulle
-    let textForBubble = currentImg.subject || currentImg.prompt.split('. ').pop(); 
-    let words = textForBubble.split(' ');
-    if (words.length > 12) { textForBubble = words.slice(0, 12).join(' ') + '...'; }
-
+    // 2. Clean Text for Bubble
+    let textForBubble = currentImg.subject || "A scene unfolds...";
+    // Remove any weird markdown the AI might have sneaked in
+    textForBubble = textForBubble.replace(/[#*_\[\]]/g, '').trim();
+    
     if ($('bubbleToggle').checked) {
         $('speechBubble').style.display = 'block';
         $('speechBubble').textContent = textForBubble;
@@ -698,44 +695,55 @@ function playCineFrame() {
         $('speechBubble').style.display = 'none';
     }
 
-    // 3. Voix (fixée pour lire exactement le texte de la bulle)
+    // 3. Advance to next frame based on Voice or Timer
+    const advance = () => {
+        if (!cinePlaying) return;
+        cineIdx++;
+        if (cineIdx >= imagesList.length) cineIdx = 0;
+        playCineFrame();
+    };
+
     if ($('voiceToggle').checked && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        
-        // On lit le texte de la bulle (qui est en anglais, vu que l'IA génère en anglais)
         const utterance = new SpeechSynthesisUtterance(textForBubble);
-        utterance.lang = 'en-US'; // Voix anglaise naturelle
-        utterance.rate = 0.9; // Un peu plus lent pour la narration
+        utterance.lang = 'en-US';
+        utterance.rate = 0.95; 
+        
+        // When the voice finishes, wait 1.5 seconds, then go to next image
+        utterance.onend = () => {
+            if (cinePlaying) cineTimeout = setTimeout(advance, 1500); 
+        };
+        
+        // Fallback in case onend doesn't trigger (browser bug)
+        // Wait duration based on text length (approx 150ms per word) + 2s buffer
+        const fallbackTime = (textForBubble.split(' ').length * 400) + 2000;
+        cineTimeout = setTimeout(() => {
+            if(cinePlaying && !window.speechSynthesis.speaking) advance();
+        }, fallbackTime);
+
         window.speechSynthesis.speak(utterance);
-    }
-    
-    if(cinePlaying) {
-        cineInterval = setInterval(() => {
-            cineIdx++;
-            if (cineIdx >= imagesList.length) cineIdx = 0;
-            playCineFrame();
-        }, 1000 / cineFps);
+    } else {
+        // No voice: Fixed 4 seconds per image to read
+        cineTimeout = setTimeout(advance, 4000);
     }
 }
 
 $('cinemaClose').onclick = () => {
     $('cinemaOverlay').classList.add('hidden');
-    clearInterval(cineInterval);
+    clearTimeout(cineTimeout);
     window.speechSynthesis.cancel();
     $('bgMusic').pause();
 };
 
 $('cinePlayPause').onclick = () => {
     cinePlaying = !cinePlaying;
-    $('cinePlayPause').textContent = cinePlaying ? '⏸ Pause' : '▶ Lecture';
-    if(cinePlaying) { playCineFrame(); }
-    else { clearInterval(cineInterval); window.speechSynthesis.cancel(); }
-};
-
-$('cineSpeed').oninput = (e) => {
-    cineFps = parseInt(e.target.value);
-    $('fpsValue').textContent = cineFps;
-    if(cinePlaying) { playCineFrame(); }
+    $('cinePlayPause').textContent = cinePlaying ? '⏸ Pause' : '▶ Play';
+    if(cinePlaying) { 
+        playCineFrame(); 
+    } else { 
+        clearTimeout(cineTimeout); 
+        window.speechSynthesis.cancel(); 
+    }
 };
 
 $('musicUpload').onchange = (e) => {
@@ -752,10 +760,10 @@ $('bgMusic').onplay = () => {
 };
 
 
-// EXPORT VIDEO (V6 - Ne bloque plus en cas d'image introuvable)
+// EXPORT VIDEO
 document.getElementById('exportVideoBtn').onclick = async () => {
     const btn = document.getElementById('exportVideoBtn');
-    btn.textContent = '⏳ Préparation...'; btn.disabled = true;
+    btn.textContent = '⏳ Preparing...'; btn.disabled = true;
     
     const images = state.results.filter(r => r.url);
     if (images.length === 0) return;
@@ -778,37 +786,35 @@ document.getElementById('exportVideoBtn').onclick = async () => {
     recorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'video/webm' });
         saveAs(blob, "film_moebius.webm");
-        btn.textContent = '🎥 Exporter en Vidéo (.webm)'; btn.disabled = false;
+        btn.textContent = '🎥 Export as Video (.webm)'; btn.disabled = false;
     };
 
     recorder.start();
 
-    // Charger une image avec un timeout pour ne pas bloquer
     const loadImg = (url) => new Promise((resolve) => {
         const i = new Image();
         i.crossOrigin = "anonymous";
         i.onload = () => resolve(i);
-        i.onerror = () => resolve(null); // Si erreur, on renvoie null pour continuer
+        i.onerror = () => resolve(null); 
         i.src = url;
-        setTimeout(() => resolve(null), 3000); // Max 3 sec par image
+        setTimeout(() => resolve(null), 3000); 
     });
 
     for (let i = 0; i < images.length; i++) {
-        btn.textContent = `⏳ Enregistrement ${i+1}/${images.length}...`;
+        btn.textContent = `⏳ Recording ${i+1}/${images.length}...`;
         const img = await loadImg(images[i].url);
         
         if (img) {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         } else {
-            // Si l'image n'a pas chargé, on dessine un écran noir avec un texte
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#fff';
             ctx.font = '30px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText(`Image ${i+1} indisponible`, canvas.width/2, canvas.height/2);
+            ctx.fillText(`Image ${i+1} unavailable`, canvas.width/2, canvas.height/2);
         }
-        await sleep(100); // 10fps
+        await sleep(100); 
     }
 
     recorder.stop();
@@ -821,18 +827,18 @@ function updateUI() {
   $('generateBtn').disabled = !hasKeys || !hasSubjects;
 }
 $('validateBtn').onclick = validateAndSaveKeys;
-$('clearKeysBtn').onclick = () => { state.apiKeys = []; state.keyHealth = []; state.keyScores = []; $('keysInput').value = ''; $('keyBadge').textContent = '0 clés'; $('keyStatus').className = 'status'; $('keyStatusText').textContent = 'Aucune clé'; $('keysPanel').innerHTML = ''; updateUI(); };
+$('clearKeysBtn').onclick = () => { state.apiKeys = []; state.keyHealth = []; state.keyScores = []; $('keysInput').value = ''; $('keyBadge').textContent = '0 keys'; $('keyStatus').className = 'status'; $('keyStatusText').textContent = 'No keys saved'; $('keysPanel').innerHTML = ''; updateUI(); };
 $('addImageBtn').onclick = () => { const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.multiple = true; input.onchange = (e) => { Array.from(e.target.files).forEach(f => handleImageFile(f)); }; input.click(); };
 $('analyzeBtn').onclick = analyzeImages;
 $('generateBtn').onclick = generateFilm;
 
 const handle = $('panelHandle'), content = $('panelContent'); let open = false;
 handle.onclick = () => { open = !open; content.classList.toggle('hidden', !open); $('panelToggle').textContent = (open ? '▲' : '▼') + ' CONSOLE'; };
-$('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugLog.map(e => `[${e.t}] ${e.m}`).join('\n')).then(() => toast('Copié')); };
+$('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugLog.map(e => `[${e.t}] ${e.m}`).join('\n')).then(() => toast('Copied')); };
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ Studio V6 prêt.');
+human('✦ V7 Studio ready.');
 </script>
 </body>
 </html>
