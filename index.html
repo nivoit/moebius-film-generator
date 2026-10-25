@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V7 — English Comic</title>
+<title>Moebius Film Generator V9 — Screen Recorder</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -34,6 +34,8 @@ select{cursor:pointer; appearance:none;}
 .btn-mega:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 .btn-red{background:rgba(196,69,54,.15);border-color:#c44536;color:#f87171;padding:.4rem .6rem;font-size:.6rem;width:auto;}
 .btn-red:hover{background:rgba(196,69,54,.3)}
+.btn-rec{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;border:none;padding:0.75rem 2rem;font-size:0.9rem;}
+.btn-rec:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(220,38,38,.5);}
 .row{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
 .row .btn{width:auto;flex:1;min-width:100px}
 .status{display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;background:#150c06;border:1px solid #3d2418;border-radius:4px;font-size:.72rem;color:#8a7a5c;margin-top:.5rem}
@@ -132,9 +134,9 @@ select{cursor:pointer; appearance:none;}
 /* CINEMA OVERLAY */
 #cinemaOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:9999;display:flex;justify-content:center;align-items:center;overflow:hidden;}
 #cinemaImgContainer {width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;}
-#cinemaImg{max-width:100%; max-height:100%; object-fit:contain; animation: kenburns 12s ease-in-out infinite alternate;}
-@keyframes kenburns {0% { transform: scale(1) translate(0, 0); }100% { transform: scale(1.15) translate(-2%, 2%); }}
-#speechBubble {position: absolute;bottom: 160px;left: 50%;transform: translateX(-50%);background: #fff;color: #000;padding: 20px 30px;border-radius: 30px;border: 4px solid #000;font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;font-size: 1.3rem;font-weight: bold;max-width: 600px;text-align: center;box-shadow: 6px 6px 0 rgba(0,0,0,0.7);display: none;z-index: 10000;line-height: 1.4;}
+#cinemaImg{max-width:100%; max-height:100%; object-fit:contain; animation: kenburns 8s ease-out forwards;}
+@keyframes kenburns {0% { transform: scale(1) translate(0, 0); }100% { transform: scale(1.25) translate(-3%, 3%); }}
+#speechBubble {position: absolute;bottom: 160px;left: 50%;transform: translateX(-50%);background: #fff;color: #000;padding: 20px 30px;border-radius: 30px;border: 4px solid #000;font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;font-size: 1.2rem;font-weight: bold;max-width: 600px;text-align: center;box-shadow: 6px 6px 0 rgba(0,0,0,0.7);display: none;z-index: 10000;line-height: 1.4;}
 #speechBubble::after {content: '';position: absolute;bottom: -25px;left: 50%;margin-left: -12px;border-width: 25px 25px 0;border-style: solid;border-color: #000 transparent;}
 #speechBubble::before {content: '';position: absolute;bottom: -18px;left: 50%;margin-left: -10px;border-width: 20px 20px 0;border-style: solid;border-color: #fff transparent;z-index: 1;}
 #cinemaControls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent);padding:20px;display:flex;flex-direction:column;gap:10px;transition:opacity 0.3s; z-index: 10001;}
@@ -143,19 +145,24 @@ select{cursor:pointer; appearance:none;}
 .cine-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:16px; display: flex; align-items: center; gap: 5px;}
 .cine-btn:hover{background:rgba(255,255,255,0.4);}
 #cinemaClose{position:absolute;top:20px;right:20px;z-index:10002;background:rgba(196,69,54,0.8);padding:10px 20px;border-radius:5px;border:none;color:#fff;cursor:pointer;font-size:16px;}
+
+/* RECORDING INDICATOR */
+.recording-dot {display:none;width:12px;height:12px;border-radius:50%;background:red;margin-right:8px;animation: blink 1s infinite;}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.recording .recording-dot {display:inline-block;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V7 ✦</div>
+<div class="kata">✦ Moebius Film Generator V9 ✦</div>
 <h1>English Comic Studio</h1>
-<p class="sub">Comic Bubbles · Voice Sync · Camera Zoom · Video Export</p>
+<p class="sub">Perfect Audio Sync · Screen Recording Export · Visible Zoom</p>
 </header>
 
 <div class="banner">
-<strong>V7 Updates:</strong> Interface fully in English. AI generates short English sentences. The image stays on screen until the voice finishes reading the bubble.
+<strong>V9 Updates:</strong> The "Export Video" button now uses the browser's built-in screen recorder. It records the video, the zoom, the bubbles, and the voice synthesis perfectly!
 </div>
 
 <section class="card">
@@ -229,7 +236,7 @@ select{cursor:pointer; appearance:none;}
 <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;">
     <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Download ALL Images (ZIP)</button>
     <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Play Comic Movie</button>
-    <button class="btn btn-amber" id="exportVideoBtn" style="display: none; width: auto; padding: 0.75rem 2rem; background: linear-gradient(135deg, #10b981, #34d399); color: #000;">🎥 Export as Video (.webm)</button>
+    <button class="btn btn-rec" id="exportVideoBtn" style="display: none; width: auto; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-family: Georgia, serif;">🎥 Record Movie to Video</button>
 </div>
 
 <div class="grid" id="resultsGrid" style="margin-top: 1.5rem;"></div>
@@ -271,7 +278,7 @@ select{cursor:pointer; appearance:none;}
         </div>
         <div class="cine-row">
             <button class="cine-btn" id="cinePlayPause">⏸ Pause</button>
-            <span style="font-size:0.8rem;">(If Voice is ON, speed is dictated by the voice)</span>
+            <span style="font-size:0.8rem;">(Speed is dictated by the voice)</span>
         </div>
     </div>
 </div>
@@ -530,12 +537,17 @@ async function analyzeImages() {
   if (state.images.length === 0) return;
   $('analyzeBtn').disabled = true; $('subjectDescriptions').style.display = 'none';
   state.subjects = [];
-  // FORCE ENGLISH AND SHORT SENTENCES
-  const sysPrompt = "You are a comic book scriptwriter. Describe the visual scene in exactly ONE short English sentence (maximum 12 words). Do NOT use markdown, titles, hashtags, or special characters. Just the plain text.";
+  const sysPrompt = "You are a comic book scriptwriter. Describe the visual scene in exactly ONE short English sentence (maximum 8 words). Do NOT use markdown, hashtags, or special characters. Just the plain text.";
   
   const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Describe this scene.", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
   const descs = await Promise.allSettled(tasks);
-  descs.forEach((d, i) => { state.subjects.push(d.status === 'fulfilled' ? d.value : "A mysterious scene."); });
+  descs.forEach((d, i) => { 
+      let text = d.status === 'fulfilled' ? d.value : "A mysterious scene.";
+      text = text.replace(/[#*_\[\]]/g, '').trim();
+      let words = text.split(' ');
+      if (words.length > 8) text = words.slice(0, 8).join(' ') + '...';
+      state.subjects.push(text); 
+  });
   renderDescriptions(); $('analyzeStatus').className = 'status ok';
   $('analyzeStatusText').textContent = `${state.subjects.length} subjects extracted.`;
   $('subjectDescriptions').style.display = 'block';
@@ -654,12 +666,15 @@ document.getElementById('downloadAllBtn').onclick = async () => {
 };
 
 // ==========================================
-// MODE CINEMA (V7) - SYNCHRONIZED TIMING
+// MODE CINEMA (V9) 
 // ==========================================
 let cineTimeout = null;
 let cineIdx = 0;
 let cinePlaying = false;
 let imagesList = [];
+let isRecording = false;
+let mediaRecorder = null;
+let recordedChunks = [];
 
 document.getElementById('playMovieBtn').onclick = () => {
     imagesList = state.results.filter(r => r.url);
@@ -672,22 +687,24 @@ document.getElementById('playMovieBtn').onclick = () => {
 };
 
 function playCineFrame() {
-    clearTimeout(cineTimeout); // Clear any pending advance
+    clearTimeout(cineTimeout); 
     if (!imagesList[cineIdx]) return;
 
     const currentImg = imagesList[cineIdx];
     
-    // 1. Zoom animation
-    $('cinemaImg').style.animation = 'none';
-    void $('cinemaImg').offsetWidth; 
-    $('cinemaImg').src = currentImg.url;
-    $('cinemaImg').style.animation = 'kenburns 12s ease-in-out infinite alternate';
+    // 1. Reset Zoom Animation
+    const imgEl = $('cinemaImg');
+    imgEl.style.animation = 'none';
+    void imgEl.offsetWidth; 
+    imgEl.src = currentImg.url;
+    imgEl.style.animation = 'kenburns 8s ease-out forwards'; 
     
     // 2. Clean Text for Bubble
     let textForBubble = currentImg.subject || "A scene unfolds...";
-    // Remove any weird markdown the AI might have sneaked in
     textForBubble = textForBubble.replace(/[#*_\[\]]/g, '').trim();
-    
+    let words = textForBubble.split(' ');
+    if (words.length > 8) textForBubble = words.slice(0, 8).join(' ') + '...';
+
     if ($('bubbleToggle').checked) {
         $('speechBubble').style.display = 'block';
         $('speechBubble').textContent = textForBubble;
@@ -695,36 +712,49 @@ function playCineFrame() {
         $('speechBubble').style.display = 'none';
     }
 
-    // 3. Advance to next frame based on Voice or Timer
+    // 3. Advance logic
+    const minDisplayTime = 4000; 
+    const startTime = Date.now();
+
     const advance = () => {
         if (!cinePlaying) return;
-        cineIdx++;
-        if (cineIdx >= imagesList.length) cineIdx = 0;
-        playCineFrame();
+        const elapsed = Date.now() - startTime;
+        if (elapsed < minDisplayTime) {
+            cineTimeout = setTimeout(advance, minDisplayTime - elapsed);
+        } else {
+            cineIdx++;
+            if (cineIdx >= imagesList.length) {
+                if (isRecording) {
+                    // Stop recording automatically when movie ends
+                    setTimeout(stopRecording, 2000);
+                    return;
+                }
+                cineIdx = 0; // Loop if not recording
+            }
+            playCineFrame();
+        }
     };
 
     if ($('voiceToggle').checked && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(textForBubble);
         utterance.lang = 'en-US';
-        utterance.rate = 0.95; 
+        utterance.rate = 0.9; 
         
-        // When the voice finishes, wait 1.5 seconds, then go to next image
+        let voiceFinished = false;
         utterance.onend = () => {
-            if (cinePlaying) cineTimeout = setTimeout(advance, 1500); 
+            voiceFinished = true;
+            cineTimeout = setTimeout(advance, 2000); 
         };
         
-        // Fallback in case onend doesn't trigger (browser bug)
-        // Wait duration based on text length (approx 150ms per word) + 2s buffer
-        const fallbackTime = (textForBubble.split(' ').length * 400) + 2000;
-        cineTimeout = setTimeout(() => {
-            if(cinePlaying && !window.speechSynthesis.speaking) advance();
+        const fallbackTime = (textForBubble.split(' ').length * 500) + 3000;
+        setTimeout(() => {
+            if(cinePlaying && !voiceFinished) advance();
         }, fallbackTime);
 
         window.speechSynthesis.speak(utterance);
     } else {
-        // No voice: Fixed 4 seconds per image to read
-        cineTimeout = setTimeout(advance, 4000);
+        cineTimeout = setTimeout(advance, minDisplayTime);
     }
 }
 
@@ -733,6 +763,7 @@ $('cinemaClose').onclick = () => {
     clearTimeout(cineTimeout);
     window.speechSynthesis.cancel();
     $('bgMusic').pause();
+    if (isRecording) stopRecording();
 };
 
 $('cinePlayPause').onclick = () => {
@@ -756,69 +787,73 @@ $('musicUpload').onchange = (e) => {
     }
 };
 $('bgMusic').onplay = () => { 
-    if(!cinePlaying) { cinePlaying = true; $('cinePlayPause').textContent = '⏸ Pause'; playCineFrame(); } 
+    if(!cinePlaying && !isRecording) { cinePlaying = true; $('cinePlayPause').textContent = '⏸ Pause'; playCineFrame(); } 
 };
 
-
-// EXPORT VIDEO
+// ==========================================
+// EXPORT VIDEO (V9) - SCREEN RECORDING
+// ==========================================
 document.getElementById('exportVideoBtn').onclick = async () => {
-    const btn = document.getElementById('exportVideoBtn');
-    btn.textContent = '⏳ Preparing...'; btn.disabled = true;
-    
-    const images = state.results.filter(r => r.url);
-    if (images.length === 0) return;
+    try {
+        // Ask user for screen capture permission
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: { displaySurface: "browser" },
+            audio: true // Captures tab audio (voice synthesis + music)
+        });
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    const firstImg = new Image(); firstImg.crossOrigin = "anonymous";
-    firstImg.src = images[0].url;
-    await new Promise(r => { firstImg.onload = r; firstImg.onerror = r; });
-    
-    const scale = Math.min(1, 1080 / Math.max(firstImg.width || 1080, firstImg.height || 1920));
-    canvas.width = (firstImg.width || 1080) * scale; 
-    canvas.height = (firstImg.height || 1920) * scale;
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        recordedChunks = [];
 
-    const stream = canvas.captureStream(10);
-    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-    const chunks = [];
-    recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
-    recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        saveAs(blob, "film_moebius.webm");
-        btn.textContent = '🎥 Export as Video (.webm)'; btn.disabled = false;
-    };
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) recordedChunks.push(e.data);
+        };
 
-    recorder.start();
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            saveAs(blob, "comic_movie.webm");
+            toast("Video saved! Open it with VLC.", "success", 5000);
+            isRecording = false;
+            $('cinemaClose').click(); // Close cinema mode
+        };
 
-    const loadImg = (url) => new Promise((resolve) => {
-        const i = new Image();
-        i.crossOrigin = "anonymous";
-        i.onload = () => resolve(i);
-        i.onerror = () => resolve(null); 
-        i.src = url;
-        setTimeout(() => resolve(null), 3000); 
-    });
-
-    for (let i = 0; i < images.length; i++) {
-        btn.textContent = `⏳ Recording ${i+1}/${images.length}...`;
-        const img = await loadImg(images[i].url);
+        // Start recording
+        mediaRecorder.start();
+        isRecording = true;
         
-        if (img) {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        } else {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#fff';
-            ctx.font = '30px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(`Image ${i+1} unavailable`, canvas.width/2, canvas.height/2);
-        }
-        await sleep(100); 
-    }
+        // Hide UI controls so they don't appear in the video
+        $('cinemaControls').classList.add('hidden');
 
-    recorder.stop();
+        // Launch the movie
+        imagesList = state.results.filter(r => r.url);
+        if (imagesList.length === 0) {
+            toast("No images to record.", "error");
+            stopRecording();
+            return;
+        }
+        
+        $('cinemaOverlay').classList.remove('hidden');
+        cineIdx = 0; cinePlaying = true;
+        
+        // Wait a brief moment before starting the first frame to ensure recording has started
+        setTimeout(() => {
+            playCineFrame();
+            toast("Recording in progress... Please do not close this tab.", "warn", 5000);
+        }, 500);
+
+    } catch (err) {
+        console.error(err);
+        toast("Screen capture cancelled or failed.", "error");
+    }
 };
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+    }
+    isRecording = false;
+    $('cinemaControls').classList.remove('hidden');
+}
 
 // BINDINGS
 function updateUI() {
@@ -838,7 +873,7 @@ $('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugL
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ V7 Studio ready.');
+human('✦ V9 Studio ready.');
 </script>
 </body>
 </html>
