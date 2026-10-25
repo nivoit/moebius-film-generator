@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V5 — Comic Animé</title>
+<title>Moebius Film Generator V6 — Ultimate</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -129,80 +129,14 @@ select{cursor:pointer; appearance:none;}
 ::-webkit-scrollbar-thumb:hover{background:#6bafc4}
 .hidden{display:none!important}
 
-/* =========================================
-   MODE CINEMA AVEC ANIMATION ET BULLES (V5)
-   ========================================= */
+/* CINEMA OVERLAY */
 #cinemaOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:9999;display:flex;justify-content:center;align-items:center;overflow:hidden;}
-
-/* Le conteneur de l'image pour le zoom */
-#cinemaImgContainer {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-/* L'image avec effet de zoom "Ken Burns" */
-#cinemaImg{
-    max-width:100%; 
-    max-height:100%; 
-    object-fit:contain; 
-    animation: kenburns 12s ease-in-out infinite alternate;
-}
-
-@keyframes kenburns {
-  0% { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.15) translate(-2%, 2%); }
-}
-
-/* La bulle de bande dessinée */
-#speechBubble {
-    position: absolute;
-    bottom: 160px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #fff;
-    color: #000;
-    padding: 20px 30px;
-    border-radius: 30px;
-    border: 4px solid #000;
-    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
-    font-size: 1.3rem;
-    font-weight: bold;
-    max-width: 600px;
-    text-align: center;
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.7);
-    display: none;
-    z-index: 10000;
-    line-height: 1.4;
-}
-
-/* La pointe de la bulle */
-#speechBubble::after {
-    content: '';
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    margin-left: -12px;
-    border-width: 25px 25px 0;
-    border-style: solid;
-    border-color: #000 transparent;
-}
-
-#speechBubble::before {
-    content: '';
-    position: absolute;
-    bottom: -18px;
-    left: 50%;
-    margin-left: -10px;
-    border-width: 20px 20px 0;
-    border-style: solid;
-    border-color: #fff transparent;
-    z-index: 1;
-}
-
+#cinemaImgContainer {width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;overflow: hidden;}
+#cinemaImg{max-width:100%; max-height:100%; object-fit:contain; animation: kenburns 12s ease-in-out infinite alternate;}
+@keyframes kenburns {0% { transform: scale(1) translate(0, 0); }100% { transform: scale(1.15) translate(-2%, 2%); }}
+#speechBubble {position: absolute;bottom: 160px;left: 50%;transform: translateX(-50%);background: #fff;color: #000;padding: 20px 30px;border-radius: 30px;border: 4px solid #000;font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;font-size: 1.3rem;font-weight: bold;max-width: 600px;text-align: center;box-shadow: 6px 6px 0 rgba(0,0,0,0.7);display: none;z-index: 10000;line-height: 1.4;}
+#speechBubble::after {content: '';position: absolute;bottom: -25px;left: 50%;margin-left: -12px;border-width: 25px 25px 0;border-style: solid;border-color: #000 transparent;}
+#speechBubble::before {content: '';position: absolute;bottom: -18px;left: 50%;margin-left: -10px;border-width: 20px 20px 0;border-style: solid;border-color: #fff transparent;z-index: 1;}
 #cinemaControls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent);padding:20px;display:flex;flex-direction:column;gap:10px;transition:opacity 0.3s; z-index: 10001;}
 #cinemaControls.hide{opacity:0;pointer-events:none;}
 .cine-row{display:flex;justify-content:center;align-items:center;gap:15px;color:#fff; flex-wrap: wrap;}
@@ -215,13 +149,13 @@ select{cursor:pointer; appearance:none;}
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V5 ✦</div>
+<div class="kata">✦ Moebius Film Generator V6 ✦</div>
 <h1>Studio Comic Animé</h1>
 <p class="sub">Bulles BD · Voix Synthétiques · Zoom Caméra · Export Vidéo</p>
 </header>
 
 <div class="banner">
-<strong>Version 5 :</strong> Les bulles sont corrigées, l'effet de zoom fonctionne, et l'exportation vidéo est optimisée pour être plus rapide.
+<strong>Version 6 :</strong> La voix lit maintenant le texte exact des bulles, le générateur est plus stable (moins d'échecs), et l'exportation vidéo ne bloque plus.
 </div>
 
 <section class="card">
@@ -233,7 +167,7 @@ select{cursor:pointer; appearance:none;}
             <select id="styleSelect">
                 <option value="Moebius">Moebius (BD SF franco-belge)</option>
                 <option value="Ghibli">Ghibli (Animation japonaise douce)</option>
-                <option value="Cyberpunk">Cyberpunk (Néon, sombre)</option>
+                <option value="Cyberpunk" selected>Cyberpunk (Néon, sombre)</option>
                 <option value="Watercolor">Aquarelle (Peinture douce)</option>
             </select>
         </div>
@@ -323,12 +257,7 @@ select{cursor:pointer; appearance:none;}
 <!-- OVERLAY CINEMA -->
 <div id="cinemaOverlay" class="hidden">
     <button id="cinemaClose">✕ Quitter</button>
-    
-    <div id="cinemaImgContainer">
-        <img id="cinemaImg" src="" alt="Film">
-    </div>
-    
-    <!-- La Bulle de BD -->
+    <div id="cinemaImgContainer"><img id="cinemaImg" src="" alt="Film"></div>
     <div id="speechBubble"></div>
 
     <div id="cinemaControls">
@@ -354,12 +283,12 @@ select{cursor:pointer; appearance:none;}
 const API_BASE = 'https://apihub.agnes-ai.com/v1';
 const MODEL_TEXT = 'agnes-2.5-flash';
 const MODEL_IMAGE = 'agnes-image-2.5-flash';
-const MAX_CONCURRENT = 6;
-const MAX_ATTEMPTS = 8;
+const MAX_CONCURRENT = 4; // Réduit pour éviter le Rate Limit de l'API
+const MAX_ATTEMPTS = 10;
 const VISION_TIMEOUT = 60000;
 const IMAGE_TIMEOUT = 180000;
-const ADAPTIVE_DELAY = 3000;
-const WORKER_COUNT = 6;
+const ADAPTIVE_DELAY = 5000; // Augmenté en cas de 429
+const WORKER_COUNT = 4;
 
 const STYLES = {
     Moebius: "Drawn in the style of a 1970s Franco-Belgian sci-fi comic (Moebius, Métal Hurlant). Clean, unbroken 'ligne claire' ink contours with intricate fine cross-hatching for texture. Muted dusty pastel color palette: pale ochre, rose, soft turquoise, pale yellow. Atmospheric perspective, deep silence, surrealism, masterpiece illustration.",
@@ -510,7 +439,7 @@ function refreshImagesGrid() {
 }
 
 // API
-async function acquireSlot() { while (state.activeRequests >= MAX_CONCURRENT) await sleep(100); state.activeRequests++; }
+async function acquireSlot() { while (state.activeRequests >= MAX_CONCURRENT) await sleep(200); state.activeRequests++; }
 function releaseSlot() { state.activeRequests = Math.max(0, state.activeRequests - 1); }
 
 async function apiVision(system, user, imageUrl) {
@@ -556,7 +485,8 @@ async function apiImageGenerate(prompt) {
       });
       clearTimeout(tid);
       if (res.status === 401 || res.status === 403) { markKeyFail(bk.idx, false); await sleep(500); continue; }
-      if (res.status === 429 || res.status === 503) { markKeyFail(bk.idx, true); await sleep(3000); continue; }
+      // Si on atteint la limite, on attend plus longtemps
+      if (res.status === 429 || res.status === 503) { markKeyFail(bk.idx, true); await sleep(ADAPTIVE_DELAY + (attempt * 2000)); continue; }
       if (!res.ok) { markKeyFail(bk.idx, false); if (attempt === MAX_ATTEMPTS - 1) { releaseSlot(); throw new Error(`HTTP ${res.status}`); } await sleep(3000); continue; }
       markKeySuccess(bk.idx); const d = await res.json(); const item = d.data?.[0];
       if (item?.url) { releaseSlot(); return item.url; }
@@ -724,11 +654,11 @@ document.getElementById('downloadAllBtn').onclick = async () => {
 };
 
 // ==========================================
-// MODE CINEMA (V5) 
+// MODE CINEMA (V6) - VOIX SYNCHRONISÉE
 // ==========================================
 let cineInterval = null;
 let cineIdx = 0;
-let cineFps = 2; // Réduit par défaut à 2 fps pour la lisibilité
+let cineFps = 2; 
 let cinePlaying = false;
 let imagesList = [];
 
@@ -750,36 +680,32 @@ function playCineFrame() {
 
     const currentImg = imagesList[cineIdx];
     
-    // 1. Changer l'image et relancer l'animation de zoom
+    // 1. Zoom animation
     $('cinemaImg').style.animation = 'none';
-    void $('cinemaImg').offsetWidth; // Force le navigateur à prendre en compte le changement
+    void $('cinemaImg').offsetWidth; 
     $('cinemaImg').src = currentImg.url;
     $('cinemaImg').style.animation = 'kenburns 12s ease-in-out infinite alternate';
     
-    // 2. Gestion de la bulle (Texte court)
+    // 2. Texte de la bulle
+    let textForBubble = currentImg.subject || currentImg.prompt.split('. ').pop(); 
+    let words = textForBubble.split(' ');
+    if (words.length > 12) { textForBubble = words.slice(0, 12).join(' ') + '...'; }
+
     if ($('bubbleToggle').checked) {
         $('speechBubble').style.display = 'block';
-        
-        // On essaie de récupérer la description du sujet, sinon on coupe le prompt
-        let text = currentImg.subject || currentImg.prompt.split('. ').pop(); 
-        
-        // On limite à 12 mots pour que ça rentre dans la bulle
-        let words = text.split(' ');
-        if (words.length > 12) {
-            text = words.slice(0, 12).join(' ') + '...';
-        }
-        $('speechBubble').textContent = text;
+        $('speechBubble').textContent = textForBubble;
     } else {
         $('speechBubble').style.display = 'none';
     }
 
-    // 3. Gestion de la voix
+    // 3. Voix (fixée pour lire exactement le texte de la bulle)
     if ($('voiceToggle').checked && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        let textToSpeak = currentImg.act + ". " + (currentImg.subject || "");
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = 'fr-FR';
-        utterance.rate = 1.0;
+        
+        // On lit le texte de la bulle (qui est en anglais, vu que l'IA génère en anglais)
+        const utterance = new SpeechSynthesisUtterance(textForBubble);
+        utterance.lang = 'en-US'; // Voix anglaise naturelle
+        utterance.rate = 0.9; // Un peu plus lent pour la narration
         window.speechSynthesis.speak(utterance);
     }
     
@@ -826,28 +752,26 @@ $('bgMusic').onplay = () => {
 };
 
 
-// EXPORT VIDEO OPTIMISÉ
+// EXPORT VIDEO (V6 - Ne bloque plus en cas d'image introuvable)
 document.getElementById('exportVideoBtn').onclick = async () => {
     const btn = document.getElementById('exportVideoBtn');
-    btn.textContent = '⏳ Préparation des images...'; btn.disabled = true;
+    btn.textContent = '⏳ Préparation...'; btn.disabled = true;
     
     const images = state.results.filter(r => r.url);
     if (images.length === 0) return;
 
-    // Créer un canvas plus petit pour éviter de faire ramer le navigateur
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
     const firstImg = new Image(); firstImg.crossOrigin = "anonymous";
     firstImg.src = images[0].url;
-    await new Promise(r => firstImg.onload = r);
+    await new Promise(r => { firstImg.onload = r; firstImg.onerror = r; });
     
-    // On réduit la résolution de la vidéo (ex: 720p) pour que ça soit rapide
-    const scale = Math.min(1, 1080 / Math.max(firstImg.width, firstImg.height));
-    canvas.width = firstImg.width * scale; 
-    canvas.height = firstImg.height * scale;
+    const scale = Math.min(1, 1080 / Math.max(firstImg.width || 1080, firstImg.height || 1920));
+    canvas.width = (firstImg.width || 1080) * scale; 
+    canvas.height = (firstImg.height || 1920) * scale;
 
-    const stream = canvas.captureStream(10); // 10 fps
+    const stream = canvas.captureStream(10);
     const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
     const chunks = [];
     recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
@@ -859,15 +783,32 @@ document.getElementById('exportVideoBtn').onclick = async () => {
 
     recorder.start();
 
+    // Charger une image avec un timeout pour ne pas bloquer
+    const loadImg = (url) => new Promise((resolve) => {
+        const i = new Image();
+        i.crossOrigin = "anonymous";
+        i.onload = () => resolve(i);
+        i.onerror = () => resolve(null); // Si erreur, on renvoie null pour continuer
+        i.src = url;
+        setTimeout(() => resolve(null), 3000); // Max 3 sec par image
+    });
+
     for (let i = 0; i < images.length; i++) {
         btn.textContent = `⏳ Enregistrement ${i+1}/${images.length}...`;
-        const img = new Image(); img.crossOrigin = "anonymous";
-        img.src = images[i].url;
-        await new Promise(r => img.onload = r);
+        const img = await loadImg(images[i].url);
         
-        // Dessiner l'image redimensionnée sur le canvas
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        await sleep(50); // 50ms de pause par image = 20fps
+        if (img) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        } else {
+            // Si l'image n'a pas chargé, on dessine un écran noir avec un texte
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            ctx.font = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Image ${i+1} indisponible`, canvas.width/2, canvas.height/2);
+        }
+        await sleep(100); // 10fps
     }
 
     recorder.stop();
@@ -891,7 +832,7 @@ $('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugL
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ Studio V5 prêt. Générez votre Comic Animé.');
+human('✦ Studio V6 prêt.');
 </script>
 </body>
 </html>
