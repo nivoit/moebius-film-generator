@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V3 — Studio</title>
+<title>Moebius Film Generator V4 — Cinéma</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -128,32 +128,86 @@ select{cursor:pointer; appearance:none;}
 ::-webkit-scrollbar-thumb{background:#4a3828;border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#6bafc4}
 .hidden{display:none!important}
-/* CINEMA MODE */
-#cinemaOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;}
-#cinemaImg{max-width:100%;max-height:100%;object-fit:contain;}
-#cinemaControls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent);padding:20px;display:flex;flex-direction:column;gap:10px;transition:opacity 0.3s;}
+
+/* =========================================
+   MODE CINEMA AVEC ANIMATION ET BULLES
+   ========================================= */
+#cinemaOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:9999;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+
+/* L'image avec effet de zoom "Ken Burns" */
+#cinemaImg{max-width:100%;max-height:100%;object-fit:contain; animation: kenburns 8s ease-in-out infinite alternate;}
+
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.05) translate(2%, 2%); }
+}
+
+/* La bulle de bande dessinée */
+#speechBubble {
+    position: absolute;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #000;
+    padding: 15px 25px;
+    border-radius: 20px;
+    border: 3px solid #000;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    max-width: 70%;
+    text-align: center;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
+    display: none;
+    z-index: 10000;
+    line-height: 1.3;
+}
+
+#speechBubble::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 20px 20px 0;
+    border-style: solid;
+    border-color: #000 transparent;
+}
+
+#speechBubble::before {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 16px 16px 0;
+    border-style: solid;
+    border-color: #fff transparent;
+    z-index: 1;
+}
+
+#cinemaControls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent);padding:20px;display:flex;flex-direction:column;gap:10px;transition:opacity 0.3s; z-index: 10001;}
 #cinemaControls.hide{opacity:0;pointer-events:none;}
-.cine-row{display:flex;justify-content:center;align-items:center;gap:15px;color:#fff;}
-.cine-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:16px;}
+.cine-row{display:flex;justify-content:center;align-items:center;gap:15px;color:#fff; flex-wrap: wrap;}
+.cine-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:16px; display: flex; align-items: center; gap: 5px;}
 .cine-btn:hover{background:rgba(255,255,255,0.4);}
-#cinemaSubtitle{position:absolute;bottom:120px;width:80%;text-align:center;color:#fff;font-family:Georgia,serif;font-size:1.2rem;text-shadow:2px 2px 4px #000;background:rgba(0,0,0,0.5);padding:10px;border-radius:5px;transition:opacity 0.3s;}
-#cinemaClose{position:absolute;top:20px;right:20px;z-index:10000;background:rgba(196,69,54,0.8);padding:10px 20px;border-radius:5px;border:none;color:#fff;cursor:pointer;font-size:16px;}
+#cinemaClose{position:absolute;top:20px;right:20px;z-index:10002;background:rgba(196,69,54,0.8);padding:10px 20px;border-radius:5px;border:none;color:#fff;cursor:pointer;font-size:16px;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V3 ✦</div>
-<h1>Studio de Création</h1>
-<p class="sub">Pipeline img→txt→img · Styles multiples · Mode Cinéma · Export Vidéo</p>
+<div class="kata">✦ Moebius Film Generator V4 ✦</div>
+<h1>Studio Comic Animé</h1>
+<p class="sub">Bulles de BD · Voix Synthétiques · Effet de Caméra · Export Vidéo</p>
 </header>
 
 <div class="banner">
-<strong>Nouveautés V3 :</strong> Choisissez votre style et format. Régénérez des images ratées. Profitez du Mode Cinéma (musique, sous-titres, vitesse) et exportez votre film en vidéo.
+<strong>Nouveautés V4 :</strong> Le Mode Cinéma se transforme en Comic Animé ! Activez les bulles et la voix pour donner vie à votre film.
 </div>
 
-<!-- OPTIONS DE CREATION -->
 <section class="card">
 <div class="card-head"><span>⚙️ Options de Création</span></div>
 <div class="card-body">
@@ -181,9 +235,9 @@ select{cursor:pointer; appearance:none;}
 <section class="card">
 <div class="card-head"><span>🔑 Clés API (Multi-Key Optimisé)</span><span class="badge" id="keyBadge">0 clés</span></div>
 <div class="card-body">
-<textarea id="keysInput" placeholder="Collez vos clés API ici, une par ligne :&#10;sk-xxxxxxxxxxxx&#10;sk-yyyyyyyyyyyy" autocomplete="off" spellcheck="false"></textarea>
+<textarea id="keysInput" placeholder="Collez vos clés API ici, une par ligne..." autocomplete="off" spellcheck="false"></textarea>
 <div class="row">
-<button class="btn btn-amber" id="validateBtn">⚡ Valider (parallèle) et enregistrer</button>
+<button class="btn btn-amber" id="validateBtn">⚡ Valider (parallèle)</button>
 <button class="btn btn-slate" id="clearKeysBtn" style="width:auto;min-width:80px;">Effacer</button>
 </div>
 <div class="keys-panel" id="keysPanel"></div>
@@ -199,7 +253,7 @@ select{cursor:pointer; appearance:none;}
 <button class="btn btn-slate" id="addImageBtn" style="flex:1;">＋ Ajouter une image</button>
 </div>
 <div class="row">
-<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extraire les Sujets (img→txt)</button>
+<button class="btn btn-amber" id="analyzeBtn" disabled>🔍 1. Extraire les Sujets</button>
 </div>
 <div class="status" id="analyzeStatus"><span class="dot"></span><span id="analyzeStatusText">En attente d'images</span></div>
 <div id="subjectDescriptions" style="margin-top:1rem; display:none;">
@@ -224,7 +278,7 @@ select{cursor:pointer; appearance:none;}
 
 <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;">
     <button class="btn btn-mega" id="downloadAllBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">📥 Télécharger TOUTES les images (ZIP)</button>
-    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Lire le Mini-Film</button>
+    <button class="btn btn-amber" id="playMovieBtn" style="display: none; width: auto; padding: 0.75rem 2rem;">▶ Lancer le Comic Animé</button>
     <button class="btn btn-amber" id="exportVideoBtn" style="display: none; width: auto; padding: 0.75rem 2rem; background: linear-gradient(135deg, #10b981, #34d399); color: #000;">🎥 Exporter en Vidéo (.webm)</button>
 </div>
 
@@ -253,13 +307,19 @@ select{cursor:pointer; appearance:none;}
 <!-- OVERLAY CINEMA -->
 <div id="cinemaOverlay" class="hidden">
     <button id="cinemaClose">✕ Quitter</button>
+    
     <img id="cinemaImg" src="" alt="Film">
-    <div id="cinemaSubtitle"></div>
+    
+    <!-- La Bulle de BD -->
+    <div id="speechBubble"></div>
+
     <div id="cinemaControls">
         <div class="cine-row">
+            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Activer la voix</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Afficher les bulles</label>
             <input type="file" id="musicUpload" accept="audio/*" style="display:none;">
-            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Ajouter Musique</button>
-            <span id="musicName" style="font-size:0.8rem; color:#aaa;">Aucune musique</span>
+            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Musique de fond</button>
+            <span id="musicName" style="font-size:0.8rem; color:#aaa;">Aucune</span>
             <audio id="bgMusic" loop></audio>
         </div>
         <div class="cine-row">
@@ -341,7 +401,7 @@ async function quickPing(key) {
 }
 async function validateAndSaveKeys() {
   const raw = $('keysInput').value.split('\n').map(l => l.trim()).filter(l => l.length > 0).filter(l => isValidKey(l));
-  if (raw.length === 0) return toast('Aucune clé valide format', 'error');
+  if (raw.length === 0) return toast('Aucune clé valide', 'error');
   $('validateBtn').disabled = true; $('validateBtn').textContent = '⚡ Validation…';
   human(`⚡ Validation de ${raw.length} clés…`);
   const results = await Promise.allSettled(raw.map(k => quickPing(k)));
@@ -358,7 +418,6 @@ async function validateAndSaveKeys() {
   $('keyStatus').className = state.apiKeys.length > 0 ? 'status ok' : 'status err';
   $('keyStatusText').textContent = state.apiKeys.length > 0 ? `${state.apiKeys.length} clé(s) active(s)` : 'Aucune clé valide';
   renderKeysPanel(); updateUI();
-  human(`✅ ${state.apiKeys.length} clés prêtes.`);
 }
 function renderKeysPanel() {
   $('keysPanel').innerHTML = state.apiKeys.map((k, i) => {
@@ -385,7 +444,7 @@ function markKeyFail(idx, is429) {
   state.keyHealth[idx].consecutiveErrors++;
   if (is429) state.keyHealth[idx].last429 = Date.now();
   state.keyScores[idx] = Math.max(0, (state.keyScores[idx] || 50) - 10);
-  if (state.keyHealth[idx].consecutiveErrors >= 5) { state.keyHealth[idx].dead = true; debug(`Clé-${idx+1} morte`, 'err'); }
+  if (state.keyHealth[idx].consecutiveErrors >= 5) { state.keyHealth[idx].dead = true; }
   renderKeysPanel();
 }
 
@@ -409,7 +468,6 @@ async function handleImageFile(file) {
   const dataUrl = await new Promise((res) => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(file); });
   const compressed = await compressImg(dataUrl, 1024);
   state.images.push(compressed); state.imageNames.push(file.name); refreshImagesGrid();
-  human(`📷 Image ajoutée : ${file.name}`);
 }
 function refreshImagesGrid() {
   const grid = $('imagesGrid'); grid.innerHTML = '';
@@ -433,7 +491,7 @@ function refreshImagesGrid() {
   updateUI();
 }
 
-// API & CONCURRENCE
+// API
 async function acquireSlot() { while (state.activeRequests >= MAX_CONCURRENT) await sleep(100); state.activeRequests++; }
 function releaseSlot() { state.activeRequests = Math.max(0, state.activeRequests - 1); }
 
@@ -441,7 +499,7 @@ async function apiVision(system, user, imageUrl) {
   await acquireSlot();
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     if (state.stopRequested) { releaseSlot(); throw new Error('Stop'); }
-    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé active'); }
+    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé'); }
     const key = bk.key; const controller = new AbortController(); const tid = setTimeout(() => controller.abort(), VISION_TIMEOUT);
     try {
       const res = await fetch(API_BASE + '/chat/completions', {
@@ -452,14 +510,14 @@ async function apiVision(system, user, imageUrl) {
       clearTimeout(tid);
       if (res.status === 401 || res.status === 403) { markKeyFail(bk.idx, false); await sleep(500); continue; }
       if (res.status === 429) { markKeyFail(bk.idx, true); await sleep(ADAPTIVE_DELAY * (attempt + 1)); continue; }
-      if (!res.ok) { markKeyFail(bk.idx, false); await sleep(2000 * (attempt + 1)); continue; }
+      if (!res.ok) { markKeyFail(bk.idx, false); await sleep(2000); continue; }
       markKeySuccess(bk.idx); releaseSlot(); const d = await res.json();
-      const content = d.choices?.[0]?.message?.content; if (!content) throw new Error('Réponse vide'); return content;
+      const content = d.choices?.[0]?.message?.content; if (!content) throw new Error('Vide'); return content;
     } catch (e) {
       clearTimeout(tid);
-      if (e.name === 'AbortError') { markKeyFail(bk.idx, false); await sleep(1000 * (attempt + 1)); continue; }
+      if (e.name === 'AbortError') { markKeyFail(bk.idx, false); await sleep(1000); continue; }
       if (attempt === MAX_ATTEMPTS - 1) { releaseSlot(); throw e; }
-      await sleep(1000 * (attempt + 1));
+      await sleep(1000);
     }
   }
   releaseSlot(); throw new Error('Échec vision');
@@ -467,10 +525,10 @@ async function apiVision(system, user, imageUrl) {
 
 async function apiImageGenerate(prompt) {
   await acquireSlot();
-  const format = $('formatSelect').value; // Récupération du format choisi
+  const format = $('formatSelect').value;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     if (state.stopRequested) { releaseSlot(); throw new Error('Stop'); }
-    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé active'); }
+    const bk = getBestKey(); if (!bk) { releaseSlot(); throw new Error('Aucune clé'); }
     const key = bk.key; const controller = new AbortController(); const tid = setTimeout(() => controller.abort(), IMAGE_TIMEOUT);
     try {
       const res = await fetch(API_BASE + '/images/generations', {
@@ -480,42 +538,40 @@ async function apiImageGenerate(prompt) {
       });
       clearTimeout(tid);
       if (res.status === 401 || res.status === 403) { markKeyFail(bk.idx, false); await sleep(500); continue; }
-      if (res.status === 429 || res.status === 503) { markKeyFail(bk.idx, true); await sleep(Math.min(30000, ADAPTIVE_DELAY * Math.pow(2, attempt))); continue; }
-      if (!res.ok) { const t = await res.text(); markKeyFail(bk.idx, false); if (attempt === MAX_ATTEMPTS - 1) { releaseSlot(); throw new Error(`HTTP ${res.status}`); } await sleep(3000 * (attempt + 1)); continue; }
+      if (res.status === 429 || res.status === 503) { markKeyFail(bk.idx, true); await sleep(3000); continue; }
+      if (!res.ok) { markKeyFail(bk.idx, false); if (attempt === MAX_ATTEMPTS - 1) { releaseSlot(); throw new Error(`HTTP ${res.status}`); } await sleep(3000); continue; }
       markKeySuccess(bk.idx); const d = await res.json(); const item = d.data?.[0];
       if (item?.url) { releaseSlot(); return item.url; }
       if (item?.b64_json) { releaseSlot(); return `data:image/png;base64,${item.b64_json}`; }
       markKeyFail(bk.idx, false); await sleep(2000);
     } catch (e) {
       clearTimeout(tid);
-      if (e.name === 'AbortError') { markKeyFail(bk.idx, true); await sleep(5000 * (attempt + 1)); continue; }
+      if (e.name === 'AbortError') { markKeyFail(bk.idx, true); await sleep(5000); continue; }
       if (attempt === MAX_ATTEMPTS - 1) { releaseSlot(); throw e; }
-      await sleep(3000 * (attempt + 1));
+      await sleep(3000);
     }
   }
   releaseSlot(); throw new Error('Échec génération');
 }
 
-// FILM STRUCTURE
 function buildFilmPrompts(subjects, totalFrames) {
   const prompts = []; const perAct = Math.ceil(totalFrames / 5);
   const currentStyleText = STYLES[$('styleSelect').value] || STYLES.Moebius;
-
   for (let i = 0; i < totalFrames; i++) {
     const act = Math.floor(i / perAct);
     const actName = ['Ouverture', 'Montée en tension', 'Point de bascule', 'Résolution', 'Dénouement'][act] || `Acte ${act + 1}`;
     const subject = subjects[i % subjects.length];
     const narrativeBeats = [
-      `Close-up establishing shot, ${subject}. The scene breathes with quiet mystery.`,
-      `Medium shot, ${subject}. A figure moves through the environment, purpose unknown.`,
-      `Wide cinematic framing, ${subject}. The world expands into surreal depth.`,
-      `Dynamic composition, ${subject}. Tension builds, shadows lengthen.`,
-      `Climactic wide shot, ${subject}. Everything converges, silence before the storm.`,
-      `Intimate detail, ${subject}. A single object tells the whole story.`,
-      `Panoramic vista, ${subject}. The horizon stretches infinitely.`,
-      `Reveal shot, ${subject}. What was hidden emerges into pale focus.`,
-      `Transition frame, ${subject}. The scene dissolves into pure atmosphere.`,
-      `Heroic pose, ${subject}. Standalone, against an endless backdrop.`
+      `Close-up establishing shot, ${subject}.`,
+      `Medium shot, ${subject}. A figure moves.`,
+      `Wide cinematic framing, ${subject}.`,
+      `Dynamic composition, ${subject}. Tension builds.`,
+      `Climactic wide shot, ${subject}.`,
+      `Intimate detail, ${subject}.`,
+      `Panoramic vista, ${subject}.`,
+      `Reveal shot, ${subject}.`,
+      `Transition frame, ${subject}.`,
+      `Heroic pose, ${subject}.`
     ];
     const beat = narrativeBeats[i % narrativeBeats.length];
     const prompt = `${currentStyleText} Cinematic frame ${i + 1}/${totalFrames}, Act: ${actName}. ${beat}`;
@@ -524,26 +580,24 @@ function buildFilmPrompts(subjects, totalFrames) {
   return prompts;
 }
 
-// ETAPES
 async function analyzeImages() {
   if (state.images.length === 0) return;
   $('analyzeBtn').disabled = true; $('subjectDescriptions').style.display = 'none';
-  human(`🔍 Extraction texte…`);
   state.subjects = [];
-  const sysPrompt = "You are an objective scene describer. Describe ONLY physical narrative content: characters, objects, environment. Do NOT mention art style. Keep under 40 words.";
-  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Extract the narrative content.", img).then(desc => desc.trim()).catch(e => "A mysterious scene with a solitary figure."));
+  const sysPrompt = "Describe the physical narrative content (characters, objects, environment). Keep under 30 words.";
+  const tasks = state.images.map((img, i) => apiVision(sysPrompt, "Extract the narrative content.", img).then(desc => desc.trim()).catch(e => "A mysterious scene."));
   const descs = await Promise.allSettled(tasks);
   descs.forEach((d, i) => { state.subjects.push(d.status === 'fulfilled' ? d.value : "A mysterious scene."); });
   renderDescriptions(); $('analyzeStatus').className = 'status ok';
   $('analyzeStatusText').textContent = `${state.subjects.length} sujets extraits.`;
   $('subjectDescriptions').style.display = 'block';
-  human('✅ Extraction terminée.'); updateUI();
+  updateUI();
 }
 function renderDescriptions() {
   const list = $('descriptionsList'); list.innerHTML = '';
   state.subjects.forEach((sub, i) => {
     const div = document.createElement('div'); div.style.marginBottom = '0.6rem';
-    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;margin-bottom:0.25rem;">Sujet ${i + 1} :</label>
+    div.innerHTML = `<label style="font-size:0.7rem;color:#8a7a5c;display:block;">Sujet ${i + 1} :</label>
       <textarea class="subject-input" data-idx="${i}" style="min-height:50px;font-size:0.72rem;">${esc(sub)}</textarea>`;
     list.appendChild(div);
   });
@@ -578,8 +632,7 @@ async function generateFilm() {
     grid.appendChild(card);
   });
 
-  updateBatchInfo(totalFrames); human(`🎬 Génération de ${totalFrames} frames…`);
-
+  updateBatchInfo(totalFrames);
   let idx = 0;
   const workers = Array.from({ length: WORKER_COUNT }, () => (async function worker() {
     while (idx < state.results.length) {
@@ -588,19 +641,14 @@ async function generateFilm() {
     }
   })());
   await Promise.all(workers);
-
   $('generateBtn').disabled = false;
-  const done = state.results.filter(r => r.url).length;
-  human(`🏁 Film terminé : ${done}/${totalFrames} frames.`);
-  toast(`Film généré : ${done}/${totalFrames}`, 'success', 4000);
 }
 
-// REGENERATION D'UNE SEULE IMAGE
 async function generateSingleFrame(idx) {
     const res = state.results[idx];
     const card = $(`card-${idx}`);
     const tf = $(`tf-${idx}`);
-    if(card) { card.className = 'photo generating'; card.querySelector('.photo-img').innerHTML = `<div class="load"><div class="spin"></div><div class="gen-title">Frame ${idx + 1}…</div></div>`; }
+    if(card) { card.className = 'photo generating'; card.querySelector('.photo-img').innerHTML = `<div class="load"><div class="spin"></div></div>`; }
     if(tf) tf.className = 'frame generating';
 
     try {
@@ -640,7 +688,7 @@ function updateBatchInfo(total) {
   $('batchInfo').innerHTML = `<span><strong>${total}</strong> frames</span><span><strong>${state.subjects.length}</strong> sujets</span><span><strong>${state.apiKeys.length}</strong> clés</span>`;
 }
 
-// ZIP DOWNLOAD
+// ZIP
 document.getElementById('downloadAllBtn').onclick = async () => {
     const btn = document.getElementById('downloadAllBtn'); btn.textContent = '⏳ Préparation...'; btn.disabled = true;
     const zip = new JSZip(); const folder = zip.folder("film");
@@ -649,43 +697,72 @@ document.getElementById('downloadAllBtn').onclick = async () => {
         if (state.results[i].url) {
             try {
                 const response = await fetch(state.results[i].url); const blob = await response.blob();
-                folder.file(`frame_${String(i+1).padStart(3, '0')}.png`, blob); count++; btn.textContent = `⏳ ${count}/${state.results.length}...`;
+                folder.file(`frame_${String(i+1).padStart(3, '0')}.png`, blob); count++;
             } catch (e) {}
         }
     }
-    btn.textContent = '🗜️ Compression...';
     const content = await zip.generateAsync({type: "blob"}); saveAs(content, "film.zip");
     btn.textContent = '📥 Télécharger ZIP'; btn.disabled = false;
 };
 
-// CINEMA MODE (Amélioré)
+// ==========================================
+// MODE CINEMA (V4) : ANIMATION, BULLES & VOIX
+// ==========================================
 let cineInterval = null;
 let cineIdx = 0;
 let cineFps = 10;
 let cinePlaying = false;
+let imagesList = [];
 
 document.getElementById('playMovieBtn').onclick = () => {
-    const images = state.results.filter(r => r.url);
-    if (images.length === 0) return;
+    imagesList = state.results.filter(r => r.url);
+    if (imagesList.length === 0) return;
+    
     $('cinemaOverlay').classList.remove('hidden');
     cineIdx = 0; cinePlaying = true; cineFps = 10;
     $('cineSpeed').value = 10; $('fpsValue').textContent = 10;
     $('cinePlayPause').textContent = '⏸ Pause';
-    playCineFrame(images);
+    
+    // Relancer l'animation de zoom à chaque nouvelle image
+    $('cinemaImg').style.animation = 'none';
+    void $('cinemaImg').offsetWidth; // Trigger reflow
+    $('cinemaImg').style.animation = 'kenburns 8s ease-in-out infinite alternate';
+
+    playCineFrame();
 };
 
-function playCineFrame(images) {
+function playCineFrame() {
     clearInterval(cineInterval);
-    const imgObj = images[cineIdx];
-    $('cinemaImg').src = imgObj.url;
-    $('cinemaSubtitle').textContent = imgObj.act + " - " + imgObj.subject;
+    if (!imagesList[cineIdx]) return;
+
+    const currentImg = imagesList[cineIdx];
+    $('cinemaImg').src = currentImg.url;
+    
+    // GESTION DES BULLES
+    if ($('bubbleToggle').checked) {
+        $('speechBubble').style.display = 'block';
+        // On extrait la partie narrative (on enlève les balises de style du prompt)
+        let text = currentImg.prompt.split('. ').pop(); 
+        $('speechBubble').textContent = text;
+    } else {
+        $('speechBubble').style.display = 'none';
+    }
+
+    // GESTION DE LA VOIX (Text-to-Speech)
+    if ($('voiceToggle').checked && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Couper la voix précédente
+        let textToSpeak = currentImg.act + ". " + (currentImg.subject || "");
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = 'fr-FR'; // Voix française
+        utterance.rate = 1.0; // Vitesse de la voix
+        window.speechSynthesis.speak(utterance);
+    }
     
     if(cinePlaying) {
         cineInterval = setInterval(() => {
             cineIdx++;
-            if (cineIdx >= images.length) cineIdx = 0;
-            $('cinemaImg').src = images[cineIdx].url;
-            $('cinemaSubtitle').textContent = images[cineIdx].act + " - " + images[cineIdx].subject;
+            if (cineIdx >= imagesList.length) cineIdx = 0;
+            playCineFrame();
         }, 1000 / cineFps);
     }
 }
@@ -693,19 +770,23 @@ function playCineFrame(images) {
 $('cinemaClose').onclick = () => {
     $('cinemaOverlay').classList.add('hidden');
     clearInterval(cineInterval);
+    window.speechSynthesis.cancel(); // Couper la voix
     $('bgMusic').pause();
 };
+
 $('cinePlayPause').onclick = () => {
     cinePlaying = !cinePlaying;
     $('cinePlayPause').textContent = cinePlaying ? '⏸ Pause' : '▶ Lecture';
-    if(cinePlaying) { playCineFrame(state.results.filter(r => r.url)); }
-    else { clearInterval(cineInterval); }
+    if(cinePlaying) { playCineFrame(); }
+    else { clearInterval(cineInterval); window.speechSynthesis.cancel(); }
 };
+
 $('cineSpeed').oninput = (e) => {
     cineFps = parseInt(e.target.value);
     $('fpsValue').textContent = cineFps;
-    if(cinePlaying) { playCineFrame(state.results.filter(r => r.url)); }
+    if(cinePlaying) { playCineFrame(); }
 };
+
 $('musicUpload').onchange = (e) => {
     const file = e.target.files[0];
     if(file) {
@@ -715,9 +796,12 @@ $('musicUpload').onchange = (e) => {
         $('musicName').textContent = file.name;
     }
 };
-$('bgMusic').onplay = () => { if(!cinePlaying) { cinePlaying = true; $('cinePlayPause').textContent = '⏸ Pause'; playCineFrame(state.results.filter(r => r.url)); } };
+$('bgMusic').onplay = () => { 
+    if(!cinePlaying) { cinePlaying = true; $('cinePlayPause').textContent = '⏸ Pause'; playCineFrame(); } 
+};
 
-// EXPORT VIDEO (.webm)
+
+// EXPORT VIDEO
 document.getElementById('exportVideoBtn').onclick = async () => {
     const btn = document.getElementById('exportVideoBtn');
     btn.textContent = '⏳ Création de la vidéo...'; btn.disabled = true;
@@ -727,7 +811,6 @@ document.getElementById('exportVideoBtn').onclick = async () => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    // On récupère les dimensions de la première image
     const firstImg = new Image(); firstImg.crossOrigin = "anonymous";
     firstImg.src = images[0].url;
     await new Promise(r => firstImg.onload = r);
@@ -751,7 +834,7 @@ document.getElementById('exportVideoBtn').onclick = async () => {
         img.src = images[i].url;
         await new Promise(r => img.onload = r);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        await sleep(100); // Attendre 100ms (10fps)
+        await sleep(100); // 10 fps
     }
 
     recorder.stop();
@@ -775,7 +858,7 @@ $('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugL
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ Studio V3 prêt. Choisissez vos options.');
+human('✦ Studio V4 prêt. Générez votre Comic Animé.');
 </script>
 </body>
 </html>
