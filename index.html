@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moebius Film Generator V4 — Cinéma</title>
+<title>Moebius Film Generator V5 — Comic Animé</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -130,47 +130,63 @@ select{cursor:pointer; appearance:none;}
 .hidden{display:none!important}
 
 /* =========================================
-   MODE CINEMA AVEC ANIMATION ET BULLES
+   MODE CINEMA AVEC ANIMATION ET BULLES (V5)
    ========================================= */
 #cinemaOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:9999;display:flex;justify-content:center;align-items:center;overflow:hidden;}
 
+/* Le conteneur de l'image pour le zoom */
+#cinemaImgContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
 /* L'image avec effet de zoom "Ken Burns" */
-#cinemaImg{max-width:100%;max-height:100%;object-fit:contain; animation: kenburns 8s ease-in-out infinite alternate;}
+#cinemaImg{
+    max-width:100%; 
+    max-height:100%; 
+    object-fit:contain; 
+    animation: kenburns 12s ease-in-out infinite alternate;
+}
 
 @keyframes kenburns {
   0% { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.05) translate(2%, 2%); }
+  100% { transform: scale(1.15) translate(-2%, 2%); }
 }
 
 /* La bulle de bande dessinée */
 #speechBubble {
     position: absolute;
-    bottom: 150px;
+    bottom: 160px;
     left: 50%;
     transform: translateX(-50%);
     background: #fff;
     color: #000;
-    padding: 15px 25px;
-    border-radius: 20px;
-    border: 3px solid #000;
+    padding: 20px 30px;
+    border-radius: 30px;
+    border: 4px solid #000;
     font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: bold;
-    max-width: 70%;
+    max-width: 600px;
     text-align: center;
-    box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.7);
     display: none;
     z-index: 10000;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 
+/* La pointe de la bulle */
 #speechBubble::after {
     content: '';
     position: absolute;
-    bottom: -20px;
+    bottom: -25px;
     left: 50%;
-    margin-left: -10px;
-    border-width: 20px 20px 0;
+    margin-left: -12px;
+    border-width: 25px 25px 0;
     border-style: solid;
     border-color: #000 transparent;
 }
@@ -178,10 +194,10 @@ select{cursor:pointer; appearance:none;}
 #speechBubble::before {
     content: '';
     position: absolute;
-    bottom: -14px;
+    bottom: -18px;
     left: 50%;
-    margin-left: -8px;
-    border-width: 16px 16px 0;
+    margin-left: -10px;
+    border-width: 20px 20px 0;
     border-style: solid;
     border-color: #fff transparent;
     z-index: 1;
@@ -199,13 +215,13 @@ select{cursor:pointer; appearance:none;}
 <div class="wrap">
 
 <header>
-<div class="kata">✦ Moebius Film Generator V4 ✦</div>
+<div class="kata">✦ Moebius Film Generator V5 ✦</div>
 <h1>Studio Comic Animé</h1>
-<p class="sub">Bulles de BD · Voix Synthétiques · Effet de Caméra · Export Vidéo</p>
+<p class="sub">Bulles BD · Voix Synthétiques · Zoom Caméra · Export Vidéo</p>
 </header>
 
 <div class="banner">
-<strong>Nouveautés V4 :</strong> Le Mode Cinéma se transforme en Comic Animé ! Activez les bulles et la voix pour donner vie à votre film.
+<strong>Version 5 :</strong> Les bulles sont corrigées, l'effet de zoom fonctionne, et l'exportation vidéo est optimisée pour être plus rapide.
 </div>
 
 <section class="card">
@@ -308,24 +324,26 @@ select{cursor:pointer; appearance:none;}
 <div id="cinemaOverlay" class="hidden">
     <button id="cinemaClose">✕ Quitter</button>
     
-    <img id="cinemaImg" src="" alt="Film">
+    <div id="cinemaImgContainer">
+        <img id="cinemaImg" src="" alt="Film">
+    </div>
     
     <!-- La Bulle de BD -->
     <div id="speechBubble"></div>
 
     <div id="cinemaControls">
         <div class="cine-row">
-            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Activer la voix</label>
-            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Afficher les bulles</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="voiceToggle" checked> 🗣️ Voix</label>
+            <label style="cursor:pointer;"><input type="checkbox" id="bubbleToggle" checked> 🗨️ Bulles</label>
             <input type="file" id="musicUpload" accept="audio/*" style="display:none;">
-            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Musique de fond</button>
+            <button class="cine-btn" onclick="document.getElementById('musicUpload').click()">🎵 Musique</button>
             <span id="musicName" style="font-size:0.8rem; color:#aaa;">Aucune</span>
             <audio id="bgMusic" loop></audio>
         </div>
         <div class="cine-row">
             <button class="cine-btn" id="cinePlayPause">⏸ Pause</button>
-            <span>Vitesse : <span id="fpsValue">10</span> fps</span>
-            <input type="range" id="cineSpeed" min="1" max="24" value="10" style="width:150px;">
+            <span>Vitesse : <span id="fpsValue">2</span> fps</span>
+            <input type="range" id="cineSpeed" min="1" max="15" value="2" style="width:150px;">
         </div>
     </div>
 </div>
@@ -706,11 +724,11 @@ document.getElementById('downloadAllBtn').onclick = async () => {
 };
 
 // ==========================================
-// MODE CINEMA (V4) : ANIMATION, BULLES & VOIX
+// MODE CINEMA (V5) 
 // ==========================================
 let cineInterval = null;
 let cineIdx = 0;
-let cineFps = 10;
+let cineFps = 2; // Réduit par défaut à 2 fps pour la lisibilité
 let cinePlaying = false;
 let imagesList = [];
 
@@ -719,14 +737,9 @@ document.getElementById('playMovieBtn').onclick = () => {
     if (imagesList.length === 0) return;
     
     $('cinemaOverlay').classList.remove('hidden');
-    cineIdx = 0; cinePlaying = true; cineFps = 10;
-    $('cineSpeed').value = 10; $('fpsValue').textContent = 10;
+    cineIdx = 0; cinePlaying = true;
+    $('cineSpeed').value = 2; $('fpsValue').textContent = 2;
     $('cinePlayPause').textContent = '⏸ Pause';
-    
-    // Relancer l'animation de zoom à chaque nouvelle image
-    $('cinemaImg').style.animation = 'none';
-    void $('cinemaImg').offsetWidth; // Trigger reflow
-    $('cinemaImg').style.animation = 'kenburns 8s ease-in-out infinite alternate';
 
     playCineFrame();
 };
@@ -736,25 +749,37 @@ function playCineFrame() {
     if (!imagesList[cineIdx]) return;
 
     const currentImg = imagesList[cineIdx];
-    $('cinemaImg').src = currentImg.url;
     
-    // GESTION DES BULLES
+    // 1. Changer l'image et relancer l'animation de zoom
+    $('cinemaImg').style.animation = 'none';
+    void $('cinemaImg').offsetWidth; // Force le navigateur à prendre en compte le changement
+    $('cinemaImg').src = currentImg.url;
+    $('cinemaImg').style.animation = 'kenburns 12s ease-in-out infinite alternate';
+    
+    // 2. Gestion de la bulle (Texte court)
     if ($('bubbleToggle').checked) {
         $('speechBubble').style.display = 'block';
-        // On extrait la partie narrative (on enlève les balises de style du prompt)
-        let text = currentImg.prompt.split('. ').pop(); 
+        
+        // On essaie de récupérer la description du sujet, sinon on coupe le prompt
+        let text = currentImg.subject || currentImg.prompt.split('. ').pop(); 
+        
+        // On limite à 12 mots pour que ça rentre dans la bulle
+        let words = text.split(' ');
+        if (words.length > 12) {
+            text = words.slice(0, 12).join(' ') + '...';
+        }
         $('speechBubble').textContent = text;
     } else {
         $('speechBubble').style.display = 'none';
     }
 
-    // GESTION DE LA VOIX (Text-to-Speech)
+    // 3. Gestion de la voix
     if ($('voiceToggle').checked && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Couper la voix précédente
+        window.speechSynthesis.cancel();
         let textToSpeak = currentImg.act + ". " + (currentImg.subject || "");
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = 'fr-FR'; // Voix française
-        utterance.rate = 1.0; // Vitesse de la voix
+        utterance.lang = 'fr-FR';
+        utterance.rate = 1.0;
         window.speechSynthesis.speak(utterance);
     }
     
@@ -770,7 +795,7 @@ function playCineFrame() {
 $('cinemaClose').onclick = () => {
     $('cinemaOverlay').classList.add('hidden');
     clearInterval(cineInterval);
-    window.speechSynthesis.cancel(); // Couper la voix
+    window.speechSynthesis.cancel();
     $('bgMusic').pause();
 };
 
@@ -801,20 +826,26 @@ $('bgMusic').onplay = () => {
 };
 
 
-// EXPORT VIDEO
+// EXPORT VIDEO OPTIMISÉ
 document.getElementById('exportVideoBtn').onclick = async () => {
     const btn = document.getElementById('exportVideoBtn');
-    btn.textContent = '⏳ Création de la vidéo...'; btn.disabled = true;
+    btn.textContent = '⏳ Préparation des images...'; btn.disabled = true;
+    
     const images = state.results.filter(r => r.url);
     if (images.length === 0) return;
 
+    // Créer un canvas plus petit pour éviter de faire ramer le navigateur
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
     const firstImg = new Image(); firstImg.crossOrigin = "anonymous";
     firstImg.src = images[0].url;
     await new Promise(r => firstImg.onload = r);
-    canvas.width = firstImg.width; canvas.height = firstImg.height;
+    
+    // On réduit la résolution de la vidéo (ex: 720p) pour que ça soit rapide
+    const scale = Math.min(1, 1080 / Math.max(firstImg.width, firstImg.height));
+    canvas.width = firstImg.width * scale; 
+    canvas.height = firstImg.height * scale;
 
     const stream = canvas.captureStream(10); // 10 fps
     const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
@@ -833,8 +864,10 @@ document.getElementById('exportVideoBtn').onclick = async () => {
         const img = new Image(); img.crossOrigin = "anonymous";
         img.src = images[i].url;
         await new Promise(r => img.onload = r);
+        
+        // Dessiner l'image redimensionnée sur le canvas
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        await sleep(100); // 10 fps
+        await sleep(50); // 50ms de pause par image = 20fps
     }
 
     recorder.stop();
@@ -858,7 +891,7 @@ $('copyConsoleBtn').onclick = () => { navigator.clipboard.writeText(state.debugL
 $('clearConsoleBtn').onclick = () => { state.debugLog = []; state.humanLog = []; $('debugLog').innerHTML=''; $('humanLog').innerHTML=''; };
 
 refreshImagesGrid();
-human('✦ Studio V4 prêt. Générez votre Comic Animé.');
+human('✦ Studio V5 prêt. Générez votre Comic Animé.');
 </script>
 </body>
 </html>
